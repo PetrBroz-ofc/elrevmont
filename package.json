@@ -1,0 +1,9 @@
+{
+  "name": "elrevmont-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Web a admin CMS pro Elrevmont — Milan Dolenský elektro (revize, montáže).",
+  "engines": {
+    "node": ">=18"
+  }
+}

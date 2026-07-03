@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrace — Elrevmont</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="login-screen">
+  <form id="login-form" class="login-box">
+    <div class="login-logo"><span class="dot"></span> ELREVMONT <span class="login-logo-sub">/ admin</span></div>
+    <h1>Přihlášení do administrace</h1>
+    <p class="login-hint">Zadejte heslo pro správu obsahu webu.</p>
+    <input type="password" id="login-password" placeholder="Heslo" autocomplete="current-password" required>
+    <button type="submit" class="btn btn-primary">Přihlásit se</button>
+    <p class="login-error" id="login-error"></p>
+  </form>
+</div>
+
+<!-- ADMIN APP -->
+<div id="admin-app" class="admin-app" hidden>
+
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><span class="dot"></span> ELREVMONT <span class="login-logo-sub">/ admin</span></div>
+    <nav class="admin-nav" id="admin-nav">
+      <button data-tab="hero" class="active">Hero</button>
+      <button data-tab="services">Služby</button>
+      <button data-tab="revize">Revize</button>
+      <button data-tab="montaze">Montáže</button>
+      <button data-tab="whyus">Proč my</button>
+      <button data-tab="timeline">Postup</button>
+      <button data-tab="faq">FAQ</button>
+      <button data-tab="gallery">Galerie</button>
+      <button data-tab="about">O nás</button>
+      <button data-tab="contact">Kontakt</button>
+      <button data-tab="footer">Footer</button>
+      <button data-tab="nav">Menu</button>
+      <button data-tab="seo">SEO</button>
+      <button data-tab="theme">Vzhled</button>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="index.html" target="_blank" class="btn btn-outline-small">Zobrazit web ↗</a>
+      <button id="logout-btn" class="btn btn-ghost-small">Odhlásit se</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div id="admin-tab-title">Hero</div>
+      <div class="admin-topbar-actions">
+        <span id="save-status" class="save-status"></span>
+        <button id="save-btn" class="btn btn-primary">Uložit změny</button>
+      </div>
+    </header>
+
+    <div class="admin-content" id="admin-content">
+      <!-- Panely se generují dynamicky přes js/admin.js -->
+    </div>
+  </main>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
