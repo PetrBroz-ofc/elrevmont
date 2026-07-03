@@ -1,0 +1,17 @@
+{
+  "colors": {
+    "bg": "#0B1A2B",
+    "bgLight": "#F7F8FA",
+    "accent": "#F2B705",
+    "accentDark": "#C9950A",
+    "steel": "#5A6B7A",
+    "safe": "#1E8E5A",
+    "textLight": "#F7F8FA",
+    "textDark": "#101820"
+  },
+  "fonts": {
+    "display": "Space Grotesk",
+    "body": "Inter",
+    "mono": "JetBrains Mono"
+  }
+}
