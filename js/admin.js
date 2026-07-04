@@ -142,7 +142,6 @@ const TABS = {
   revize: { title: 'Revize', render: renderRevizeTab },
   montaze: { title: 'Montáže', render: renderMontazeTab },
   whyus: { title: 'Proč my', render: renderWhyUsTab },
-  timeline: { title: 'Postup spolupráce', render: renderTimelineTab },
   faq: { title: 'Časté dotazy', render: renderFaqTab },
   gallery: { title: 'Galerie', render: renderGalleryTab },
   about: { title: 'O nás', render: renderAboutTab },
@@ -155,12 +154,17 @@ const TABS = {
 
 function renderHeroTab(root) {
   const h = CONTENT.hero;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Úvodní sekce s hlavním nadpisem, popiskem a tlačítky, kterou návštěvník vidí jako první.')]));
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Úvodní sekce s videem, které se při scrollu roztahuje, a textem po stranách.')]));
 
   const panel = el('div', { class: 'card-panel' });
-  panel.appendChild(field('Eyebrow (malý text nad nadpisem)', textInput(h.eyebrow, v => h.eyebrow = v)));
-  panel.appendChild(field('Hlavní nadpis', textArea(h.title, v => h.title = v), 'Nový řádek v textu = zalomení řádku na webu.'));
-  panel.appendChild(field('Podnadpis', textArea(h.subtitle, v => h.subtitle = v)));
+  panel.appendChild(field('Eyebrow (malý text nad videem)', textInput(h.eyebrow, v => h.eyebrow = v)));
+
+  const titleRow = el('div', { class: 'field-row' });
+  titleRow.appendChild(field('Text vlevo', textInput(h.titleLeft, v => h.titleLeft = v)));
+  titleRow.appendChild(field('Text vpravo (zvýrazněný)', textInput(h.titleRight, v => h.titleRight = v)));
+  panel.appendChild(titleRow);
+
+  panel.appendChild(field('Podnadpis (zobrazí se pod videem po rozbalení)', textArea(h.subtitle, v => h.subtitle = v)));
 
   const row = el('div', { class: 'field-row' });
   row.appendChild(field('Text hlavního tlačítka', textInput(h.primaryButton.label, v => h.primaryButton.label = v)));
@@ -172,8 +176,16 @@ function renderHeroTab(root) {
   row2.appendChild(field('Odkaz vedlejšího tlačítka', textInput(h.secondaryButton.href, v => h.secondaryButton.href = v)));
   panel.appendChild(row2);
 
-  panel.appendChild(field('Cesta k pozadí (obrázek)', textInput(h.backgroundImage, v => h.backgroundImage = v), 'Např. assets/img/hero-bg.jpg'));
+  panel.appendChild(field('Text nápovědy ke scrollování', textInput(h.scrollHint, v => h.scrollHint = v), 'Zobrazí se pod videem, dokud se nerozbalí naplno.'));
   root.appendChild(panel);
+
+  const mediaPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Video a pozadí')])])
+  ]);
+  mediaPanel.appendChild(field('Odkaz na video (.mp4)', textInput(h.backgroundVideo, v => h.backgroundVideo = v), 'Přímý odkaz na video soubor, které se roztahuje při scrollování.'));
+  mediaPanel.appendChild(field('Poster obrázek videa', textInput(h.backgroundVideoPoster, v => h.backgroundVideoPoster = v), 'Zobrazí se, než se video načte.'));
+  mediaPanel.appendChild(field('Cesta k pozadí sekce (obrázek)', textInput(h.backgroundImage, v => h.backgroundImage = v), 'Jemné pozadí za celou hero sekcí, např. assets/img/hero-bg.jpg'));
+  root.appendChild(mediaPanel);
 
   const statsPanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Statistiky (3 čísla v hero sekci)')])])
@@ -394,38 +406,6 @@ function renderWhyUsTab(root) {
   redraw();
 }
 
-function renderTimelineTab(root) {
-  const t = CONTENT.timeline;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Kroky spolupráce zobrazené jako časová osa.')]));
-
-  const panel = el('div', { class: 'card-panel' });
-  panel.appendChild(field('Eyebrow', textInput(t.eyebrow, v => t.eyebrow = v)));
-  panel.appendChild(field('Nadpis sekce', textInput(t.title, v => t.title = v)));
-  root.appendChild(panel);
-
-  const listPanel = el('div', { class: 'card-panel' }, [
-    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Kroky')])])
-  ]);
-  const container = el('div');
-  listPanel.appendChild(container);
-  root.appendChild(listPanel);
-
-  function redraw() {
-    renderRepeater({
-      container,
-      items: t.steps,
-      itemLabel: 'Krok',
-      fieldsConfig: [
-        { render: (item) => field('Název kroku', textInput(item.title, v => item.title = v)) },
-        { render: (item) => field('Popis', textArea(item.description, v => item.description = v)) }
-      ],
-      onAdd: () => { t.steps.push({ title: '', description: '' }); redraw(); },
-      onRemove: (i) => { t.steps.splice(i, 1); redraw(); }
-    });
-  }
-  redraw();
-}
-
 function renderFaqTab(root) {
   const f = CONTENT.faq;
   root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Časté dotazy zobrazené jako rozklikávací seznam.')]));
@@ -504,7 +484,7 @@ function renderAboutTab(root) {
 
 function renderContactTab(root) {
   const c = CONTENT.contact;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Kontaktní údaje a texty kontaktního formuláře.')]));
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Kontaktní údaje a mapa s provozovnou (web funguje jako prezentace firmy, bez poptávkového formuláře).')]));
 
   const panel = el('div', { class: 'card-panel' });
   panel.appendChild(field('Eyebrow', textInput(c.eyebrow, v => c.eyebrow = v)));
@@ -521,16 +501,15 @@ function renderContactTab(root) {
   panel.appendChild(field('IČO', textInput(c.ico, v => c.ico = v)));
   root.appendChild(panel);
 
-  const formPanel = el('div', { class: 'card-panel' }, [
-    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Texty formuláře')])])
+  const mapPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Mapa')])])
   ]);
-  const labels = c.formLabels;
-  formPanel.appendChild(field('Jméno (label)', textInput(labels.name, v => labels.name = v)));
-  formPanel.appendChild(field('E-mail (label)', textInput(labels.email, v => labels.email = v)));
-  formPanel.appendChild(field('Telefon (label)', textInput(labels.phone, v => labels.phone = v)));
-  formPanel.appendChild(field('Zpráva (label)', textInput(labels.message, v => labels.message = v)));
-  formPanel.appendChild(field('Text tlačítka odeslat', textInput(labels.submit, v => labels.submit = v)));
-  root.appendChild(formPanel);
+  mapPanel.appendChild(field(
+    'Vlastní Google Maps embed odkaz (volitelné)',
+    textInput(c.mapEmbed, v => c.mapEmbed = v),
+    'Necháte-li prázdné, mapa se automaticky vygeneruje z adresy provozovny výše. Vlastní odkaz získáte v Google Maps přes Sdílet → Vložit mapu.'
+  ));
+  root.appendChild(mapPanel);
 }
 
 function renderFooterTab(root) {

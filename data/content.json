@@ -18,20 +18,22 @@
       { "label": "Revize", "href": "#revize" },
       { "label": "Montáže", "href": "#montaze" },
       { "label": "Proč my", "href": "#proc-my" },
-      { "label": "Postup", "href": "#postup" },
       { "label": "Reference", "href": "#reference" },
       { "label": "Kontakt", "href": "#kontakt" }
     ],
-    "ctaLabel": "Nezávazná poptávka"
+    "ctaLabel": "Kontakt"
   },
   "hero": {
     "eyebrow": "ČSN 33 2000-6 · ČSN 33 1500 · ČSN 33 1600 ed.2",
-    "title": "Revize, na které se\nzařízení spolehne.",
-    "subtitle": "Provádíme revize elektroinstalací, elektrických zařízení, spotřebičů a hromosvodů. Elektromontáže, servis i školení v Liberci a okolí.",
-    "primaryButton": { "label": "Poptat revizi", "href": "#kontakt" },
-    "secondaryButton": { "label": "Naše služby", "href": "#revize" },
+    "titleLeft": "Milan",
+    "titleRight": "Dolenský",
+    "subtitle": "Revize elektroinstalací, elektrických zařízení, spotřebičů a hromosvodů. Elektromontáže, servis i školení v Liberci a okolí.",
+    "primaryButton": { "label": "Naše služby", "href": "#sluzby" },
+    "secondaryButton": { "label": "Kontakt", "href": "#kontakt" },
     "backgroundImage": "assets/img/hero-bg.jpg",
-    "backgroundVideo": "",
+    "backgroundVideo": "https://videos.pexels.com/video-files/28886877/12504681_1920_1080_30fps.mp4",
+    "backgroundVideoPoster": "assets/img/hero-bg.jpg",
+    "scrollHint": "Posuňte pro rozbalení",
     "stats": [
       { "value": "20+", "label": "let praxe v oboru" },
       { "value": "35 kV", "label": "rozsah oprávnění" },
@@ -156,17 +158,6 @@
       }
     ]
   },
-  "timeline": {
-    "eyebrow": "Postup spolupráce",
-    "title": "Jak probíhá revize krok za krokem",
-    "steps": [
-      { "title": "Poptávka", "description": "Napíšete nebo zavoláte, popíšeme si rozsah zařízení a domluvíme termín ohledání." },
-      { "title": "Ohledání objektu", "description": "Prohlédneme instalaci či zařízení přímo na místě a upřesníme rozsah revize." },
-      { "title": "Provedení revize", "description": "Provedeme měření a kontrolu dle příslušných norem ČSN a platných předpisů." },
-      { "title": "Revizní zpráva", "description": "Vystavíme revizní zprávu s výsledkem a případnými zjištěnými závadami." },
-      { "title": "Předání a doporučení", "description": "Zprávu předáme, vysvětlíme zjištění a doporučíme termín další revize." }
-    ]
-  },
   "faq": {
     "eyebrow": "Časté dotazy",
     "title": "Co byste měli vědět",
@@ -211,21 +202,14 @@
   },
   "contact": {
     "eyebrow": "Kontakt",
-    "title": "Poptejte revizi nebo montáž",
-    "subtitle": "Ozvěte se telefonicky, e-mailem nebo přes formulář – odpovíme co nejdříve.",
+    "title": "Kde nás najdete",
+    "subtitle": "Ozvěte se telefonicky nebo e-mailem. Provozovna sídlí na Pšeničné ulici v Liberci.",
     "phone": "+420 604 530 872",
     "email": "elrevmont@volny.cz",
     "billingAddress": "Pšeničná 759/5, Liberec 14, 460 14",
     "operationAddress": "Pšeničná 760/3, Liberec 14, 460 14",
     "ico": "",
-    "mapEmbed": "",
-    "formLabels": {
-      "name": "Jméno a příjmení",
-      "email": "E-mail",
-      "phone": "Telefon",
-      "message": "Popis poptávky",
-      "submit": "Odeslat poptávku"
-    }
+    "mapEmbed": ""
   },
   "footer": {
     "companyName": "Milan Dolenský – elektro",

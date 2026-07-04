@@ -18,6 +18,7 @@ admin.html           administrace (samostatná stránka, mimo index)
 css/style.css         styly veřejného webu
 css/admin.css         styly administrace
 js/main.js            renderer veřejného webu (čte data/content.json)
+js/hero-expand.js      scroll-expand efekt hero videa (vanilla JS, bez frameworku)
 js/admin.js            logika administrace (login, formuláře, ukládání)
 js/icons.js            sada SVG ikon
 data/content.json      veškerý textový/obsahový obsah webu
@@ -26,6 +27,36 @@ api/login.js            serverless funkce — ověření hesla admina
 api/save.js              serverless funkce — commit změn do GitHubu
 assets/img/              obrázky (hero pozadí, galerie, o nás...)
 ```
+
+## Hero sekce — scroll-expand video
+
+Úvodní sekce používá efekt inspirovaný komponentou "ScrollExpandMedia", ale
+přepsaný do čistého vanilla JS (`js/hero-expand.js`) bez Reactu, Next.js nebo
+Framer Motion — aby zůstala zachována architektura statického webu.
+
+Chování: video v malém boxu se při scrollování postupně roztahuje na celou
+šířku/výšku obrazovky. Přes video se rozjíždí text — vlevo "Milan", vpravo
+"Dolenský" (nastavitelné v adminu, záložka Hero → `titleLeft` / `titleRight`
+v `data/content.json`). Po plném rozbalení videa se odemkne normální scroll
+a zobrazí se zbytek hero obsahu (podnadpis, tlačítka, statistiky) a dále
+navazují ostatní sekce webu (Služby, Revize, Montáže, O nás, FAQ, Kontakt...).
+
+Video je aktuálně nastaveno na volně dostupný stock klip z Pexels
+(technik u elektro rozvaděče, licence Pexels — volné komerční i nekomerční
+užití bez nutnosti atribuce):
+```
+https://videos.pexels.com/video-files/28886877/12504681_1920_1080_30fps.mp4
+```
+Odkaz na video lze kdykoliv změnit v adminu (záložka Hero → „Odkaz na video“)
+nebo přímo v `data/content.json` (`hero.backgroundVideo`).
+
+## Kontaktní sekce — mapa místo formuláře
+
+Web funguje jako prezentace firmy, ne jako nástroj na sběr poptávek, proto
+kontaktní sekce místo formuláře zobrazuje Google mapu s provozovnou. Mapa se
+automaticky generuje z adresy v `data/content.json` (`contact.operationAddress`).
+Pro vlastní embed (např. s jiným zoomem nebo stylem) lze v adminu vyplnit pole
+„Vlastní Google Maps embed odkaz“ (Google Maps → Sdílet → Vložit mapu).
 
 ## Nastavení na Vercelu
 

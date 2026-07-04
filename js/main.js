@@ -59,7 +59,6 @@ function renderNav(data) {
 function renderHero(data) {
   const h = data.hero;
   document.getElementById('hero-eyebrow').textContent = h.eyebrow;
-  document.getElementById('hero-title').textContent = h.title;
   document.getElementById('hero-subtitle').textContent = h.subtitle;
 
   const btnP = document.getElementById('hero-btn-primary');
@@ -72,6 +71,11 @@ function renderHero(data) {
 
   if (h.backgroundImage) {
     document.getElementById('hero-bg').style.backgroundImage = `url('${h.backgroundImage}')`;
+  }
+
+  // Scroll-expand video efekt (vanilla JS, viz js/hero-expand.js)
+  if (typeof initHeroExpand === 'function') {
+    initHeroExpand(h);
   }
 
   const stats = document.getElementById('hero-stats');
@@ -163,24 +167,6 @@ function renderWhyUs(data) {
   });
 }
 
-function renderTimeline(data) {
-  const t = data.timeline;
-  document.getElementById('timeline-eyebrow').textContent = t.eyebrow;
-  document.getElementById('timeline-title').textContent = t.title;
-
-  const list = document.getElementById('timeline-list');
-  list.innerHTML = '';
-  t.steps.forEach((s, i) => {
-    list.appendChild(el('div', { class: 'timeline-step', 'data-reveal': '' }, [
-      el('div', { class: 'timeline-num' }, [document.createTextNode(String(i + 1).padStart(2, '0'))]),
-      el('div', {}, [
-        el('h3', {}, [document.createTextNode(s.title)]),
-        el('p', {}, [document.createTextNode(s.description)])
-      ])
-    ]));
-  });
-}
-
 function renderFAQ(data) {
   const f = data.faq;
   document.getElementById('faq-eyebrow').textContent = f.eyebrow;
@@ -258,12 +244,14 @@ function renderContact(data) {
     ]));
   });
 
-  const labels = c.formLabels;
-  document.getElementById('label-name').textContent = labels.name;
-  document.getElementById('label-email').textContent = labels.email;
-  document.getElementById('label-phone').textContent = labels.phone;
-  document.getElementById('label-message').textContent = labels.message;
-  document.getElementById('form-submit').textContent = labels.submit;
+  const mapFrame = document.getElementById('contact-map-iframe');
+  if (mapFrame && c.mapEmbed) {
+    mapFrame.src = c.mapEmbed;
+  } else if (mapFrame) {
+    // Fallback: sestavíme embed URL přímo z adresy provozovny (bez nutnosti API klíče).
+    const query = encodeURIComponent(c.operationAddress || c.billingAddress || '');
+    mapFrame.src = `https://maps.google.com/maps?q=${query}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+  }
 }
 
 function renderFooter(data) {
@@ -276,19 +264,6 @@ function renderFooter(data) {
   links.innerHTML = '';
   f.links.forEach(l => {
     links.appendChild(el('a', { href: l.href }, [document.createTextNode(l.label)]));
-  });
-}
-
-function setupContactForm() {
-  const form = document.getElementById('contact-form');
-  const status = document.getElementById('form-status');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    // Poznámka: bez backendu formulář jen potvrdí odeslání lokálně.
-    // Pro reálné odesílání e-mailů lze napojit vlastní /api/contact endpoint.
-    status.textContent = 'Děkujeme, poptávku jsme zaznamenali. Ozveme se co nejdříve.';
-    status.className = 'form-status success';
-    form.reset();
   });
 }
 
@@ -330,13 +305,11 @@ function setupScrollReveal() {
     renderRevize(data);
     renderMontaze(data);
     renderWhyUs(data);
-    renderTimeline(data);
     renderGallery(data);
     renderAbout(data);
     renderFAQ(data);
     renderContact(data);
     renderFooter(data);
-    setupContactForm();
     setupNavToggle();
     setupScrollReveal();
   } catch (err) {
