@@ -1,5 +1,5 @@
 /* =========================================================
-   ELREVMONT — frontend renderer
+   ELREVMONT — frontend renderer v2
    Veškerý obsah stránky se natahuje z /data/content.json.
    Nic není natvrdo v HTML — admin panel edituje tento JSON
    a frontend ho jen vykresluje.
@@ -48,6 +48,10 @@ function renderSEO(data) {
 
 function renderNav(data) {
   document.getElementById('nav-logo').textContent = data.nav.logo;
+  document.getElementById('logo-icon').innerHTML = getIcon('logo-bolt');
+  const footerIcon = document.getElementById('footer-logo-icon');
+  if (footerIcon) footerIcon.innerHTML = getIcon('logo-bolt');
+
   const links = document.getElementById('nav-links');
   links.innerHTML = '';
   data.nav.links.forEach(l => {
@@ -58,32 +62,39 @@ function renderNav(data) {
 
 function renderHero(data) {
   const h = data.hero;
-  document.getElementById('hero-eyebrow').textContent = h.eyebrow;
+  document.getElementById('hero-eyebrow').textContent = h.eyebrowTag;
+  document.getElementById('hero-title').textContent = h.title;
   document.getElementById('hero-subtitle').textContent = h.subtitle;
-
-  const btnP = document.getElementById('hero-btn-primary');
-  btnP.textContent = h.primaryButton.label;
-  btnP.setAttribute('href', h.primaryButton.href);
-
-  const btnS = document.getElementById('hero-btn-secondary');
-  btnS.textContent = h.secondaryButton.label;
-  btnS.setAttribute('href', h.secondaryButton.href);
 
   if (h.backgroundImage) {
     document.getElementById('hero-bg').style.backgroundImage = `url('${h.backgroundImage}')`;
   }
 
-  // Scroll-expand video efekt (vanilla JS, viz js/hero-expand.js)
-  if (typeof initHeroExpand === 'function') {
-    initHeroExpand(h);
-  }
+  const phoneBtn = document.getElementById('hero-btn-phone');
+  phoneBtn.innerHTML = getIcon('phone') + `<span>${h.phone}</span>`;
+  phoneBtn.setAttribute('href', `tel:${h.phone.replace(/\s/g, '')}`);
 
-  const stats = document.getElementById('hero-stats');
-  stats.innerHTML = '';
-  h.stats.forEach(s => {
-    stats.appendChild(el('div', { class: 'stat' }, [
-      el('div', { class: 'stat-value' }, [document.createTextNode(s.value)]),
-      el('div', { class: 'stat-label' }, [document.createTextNode(s.label)])
+  const emailBtn = document.getElementById('hero-btn-email');
+  emailBtn.innerHTML = getIcon('mail') + `<span>${h.email}</span>`;
+  emailBtn.setAttribute('href', `mailto:${h.email}`);
+
+  const cue = document.getElementById('hero-scroll-cue');
+  cue.innerHTML = getIcon('arrow-down');
+  cue.setAttribute('title', h.scrollCueText || '');
+}
+
+function renderAboutFirm(data) {
+  const a = data.aboutFirm;
+  document.getElementById('aboutfirm-eyebrow').textContent = a.eyebrow;
+  document.getElementById('aboutfirm-title').textContent = a.title;
+  document.getElementById('aboutfirm-text').textContent = a.text;
+
+  const badges = document.getElementById('aboutfirm-badges');
+  badges.innerHTML = '';
+  a.badges.forEach(b => {
+    badges.appendChild(el('div', { class: 'about-firm-badge' }, [
+      el('div', { class: 'value' }, [document.createTextNode(b.value)]),
+      el('div', { class: 'label' }, [document.createTextNode(b.label)])
     ]));
   });
 }
@@ -108,8 +119,10 @@ function renderServices(data) {
 function renderRevize(data) {
   const r = data.revize;
   document.getElementById('revize-eyebrow').textContent = r.eyebrow;
+  document.getElementById('revize-norms').textContent = r.normsLine;
   document.getElementById('revize-title').textContent = r.title;
   document.getElementById('revize-intro').textContent = r.intro;
+  document.getElementById('revize-types-title').textContent = r.typesTitle;
 
   const types = document.getElementById('revize-types');
   types.innerHTML = '';
@@ -118,6 +131,13 @@ function renderRevize(data) {
       el('h3', {}, [document.createTextNode(t.title)]),
       el('p', {}, [document.createTextNode(t.description)])
     ]));
+  });
+
+  document.getElementById('revize-why-title').textContent = r.whyTitle;
+  const whyList = document.getElementById('revize-why-list');
+  whyList.innerHTML = '';
+  r.whyPoints.forEach(point => {
+    whyList.appendChild(el('li', {}, [document.createTextNode(point)]));
   });
 
   document.getElementById('revize-objects-title').textContent = r.objects.title;
@@ -151,50 +171,20 @@ function renderMontaze(data) {
   });
 }
 
-function renderWhyUs(data) {
-  const w = data.whyUs;
-  document.getElementById('whyus-eyebrow').textContent = w.eyebrow;
-  document.getElementById('whyus-title').textContent = w.title;
+function renderSkoleni(data) {
+  const s = data.skoleni;
+  document.getElementById('skoleni-eyebrow').textContent = s.eyebrow;
+  document.getElementById('skoleni-title').textContent = s.title;
+  document.getElementById('skoleni-desc').textContent = s.description;
 
-  const grid = document.getElementById('whyus-grid');
+  const grid = document.getElementById('skoleni-grid');
   grid.innerHTML = '';
-  w.cards.forEach(c => {
-    grid.appendChild(el('div', { class: 'why-card', 'data-reveal': '' }, [
-      el('div', { class: 'why-icon', html: getIcon(c.icon) }),
-      el('h3', {}, [document.createTextNode(c.title)]),
-      el('p', {}, [document.createTextNode(c.text)])
+  s.items.forEach(item => {
+    grid.appendChild(el('div', { class: 'skoleni-card', 'data-reveal': '' }, [
+      el('div', { class: 'skoleni-icon', html: getIcon(item.icon) }),
+      el('h3', {}, [document.createTextNode(item.title)]),
+      el('p', {}, [document.createTextNode(item.text)])
     ]));
-  });
-}
-
-function renderFAQ(data) {
-  const f = data.faq;
-  document.getElementById('faq-eyebrow').textContent = f.eyebrow;
-  document.getElementById('faq-title').textContent = f.title;
-
-  const list = document.getElementById('faq-list');
-  list.innerHTML = '';
-  f.items.forEach(item => {
-    const answer = el('div', { class: 'faq-answer' }, [
-      el('p', {}, [document.createTextNode(item.answer)])
-    ]);
-    const question = el('button', { class: 'faq-question', type: 'button' }, [
-      el('span', {}, [document.createTextNode(item.question)]),
-      el('span', { class: 'icon' })
-    ]);
-    const wrap = el('div', { class: 'faq-item', 'data-reveal': '' }, [question, answer]);
-    question.addEventListener('click', () => {
-      const isOpen = wrap.classList.contains('open');
-      document.querySelectorAll('.faq-item.open').forEach(x => {
-        x.classList.remove('open');
-        x.querySelector('.faq-answer').style.maxHeight = null;
-      });
-      if (!isOpen) {
-        wrap.classList.add('open');
-        answer.style.maxHeight = answer.scrollHeight + 'px';
-      }
-    });
-    list.appendChild(wrap);
   });
 }
 
@@ -202,22 +192,78 @@ function renderGallery(data) {
   const g = data.gallery;
   document.getElementById('gallery-eyebrow').textContent = g.eyebrow;
   document.getElementById('gallery-title').textContent = g.title;
+  document.getElementById('gallery-subtitle').textContent = g.subtitle || '';
 
-  const grid = document.getElementById('gallery-grid');
+  const grid = document.getElementById('gallery-categories');
   grid.innerHTML = '';
-  g.images.forEach(img => {
-    grid.appendChild(el('img', { src: img.src, alt: img.alt, loading: 'lazy', 'data-reveal': '' }));
+
+  if (!g.categories || g.categories.length === 0) {
+    grid.appendChild(el('div', { class: 'gallery-empty' }, [
+      document.createTextNode('Zatím zde nejsou žádné kategorie fotografií. Přidejte je v administraci.')
+    ]));
+    return;
+  }
+
+  g.categories.forEach(cat => {
+    const btn = el('button', { class: 'gallery-cat', type: 'button', 'data-reveal': '' }, [
+      el('img', { src: cat.cover || (cat.images[0] && cat.images[0].src) || '', alt: cat.name, loading: 'lazy' }),
+      el('div', { class: 'gallery-cat-overlay' }, [
+        el('div', { class: 'cat-name' }, [document.createTextNode(cat.name)]),
+        el('div', { class: 'cat-count' }, [document.createTextNode(`${(cat.images || []).length} fotografií`)])
+      ])
+    ]);
+    btn.addEventListener('click', () => openGalleryAlbum(cat));
+    grid.appendChild(btn);
+  });
+
+  // Lightbox close handlers
+  const lightbox = document.getElementById('gallery-lightbox');
+  document.getElementById('lightbox-close').innerHTML = getIcon('x');
+  document.getElementById('lightbox-close').addEventListener('click', () => {
+    lightbox.classList.remove('open');
+  });
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) lightbox.classList.remove('open');
   });
 }
 
-function renderAbout(data) {
-  const a = data.about;
-  document.getElementById('about-eyebrow').textContent = a.eyebrow;
-  document.getElementById('about-title').textContent = a.title;
-  document.getElementById('about-text').textContent = a.text;
-  const img = document.getElementById('about-img');
-  img.src = a.image;
-  img.alt = a.title;
+function openGalleryAlbum(category) {
+  const lightbox = document.getElementById('gallery-lightbox');
+  document.getElementById('lightbox-title').textContent = category.name;
+  const grid = document.getElementById('lightbox-grid');
+  grid.innerHTML = '';
+  (category.images || []).forEach(img => {
+    grid.appendChild(el('img', { src: img.src, alt: img.alt || category.name, loading: 'lazy' }));
+  });
+  lightbox.classList.add('open');
+}
+
+function renderReference(data) {
+  const r = data.reference;
+  document.getElementById('reference-eyebrow').textContent = r.eyebrow;
+  document.getElementById('reference-title').textContent = r.title;
+
+  const row1 = document.getElementById('marquee-row-1');
+  const row2 = document.getElementById('marquee-row-2');
+  row1.innerHTML = '';
+  row2.innerHTML = '';
+
+  if (!r.items || r.items.length === 0) return;
+
+  // Rozdělíme reference do dvou řad a duplikujeme obsah pro plynulou nekonečnou smyčku.
+  const half = Math.ceil(r.items.length / 2);
+  const firstRow = r.items.slice(0, half);
+  const secondRow = r.items.length > half ? r.items.slice(half) : r.items;
+
+  function buildCard(item) {
+    return el('div', { class: 'reference-card' }, [
+      el('div', { class: 'ref-name' }, [document.createTextNode(item.name)]),
+      el('div', { class: 'ref-text' }, [document.createTextNode(item.text)])
+    ]);
+  }
+
+  [firstRow, firstRow].forEach(set => set.forEach(item => row1.appendChild(buildCard(item))));
+  [secondRow, secondRow].forEach(set => set.forEach(item => row2.appendChild(buildCard(item))));
 }
 
 function renderContact(data) {
@@ -248,7 +294,6 @@ function renderContact(data) {
   if (mapFrame && c.mapEmbed) {
     mapFrame.src = c.mapEmbed;
   } else if (mapFrame) {
-    // Fallback: sestavíme embed URL přímo z adresy provozovny (bez nutnosti API klíče).
     const query = encodeURIComponent(c.operationAddress || c.billingAddress || '');
     mapFrame.src = `https://maps.google.com/maps?q=${query}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
   }
@@ -301,13 +346,13 @@ function setupScrollReveal() {
     renderSEO(data);
     renderNav(data);
     renderHero(data);
+    renderAboutFirm(data);
     renderServices(data);
     renderRevize(data);
     renderMontaze(data);
-    renderWhyUs(data);
+    renderSkoleni(data);
     renderGallery(data);
-    renderAbout(data);
-    renderFAQ(data);
+    renderReference(data);
     renderContact(data);
     renderFooter(data);
     setupNavToggle();

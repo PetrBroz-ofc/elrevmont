@@ -1,8 +1,9 @@
 /* =========================================================
-   ELREVMONT — Admin panel
+   ELREVMONT — Admin panel v2
    Edituje veškerý obsah, který index.html natahuje z
    data/content.json a data/theme.json. Ukládání jde přes
    /api/save (Vercel serverless), který commituje do GitHubu.
+   Obrázky do galerie jdou přes /api/upload-image.
    GitHub token nikdy neopouští server.
    ========================================================= */
 
@@ -102,13 +103,6 @@ function textArea(value, onChange, placeholder = '') {
   return input;
 }
 
-function urlInput(value, onChange, placeholder = '') {
-  const input = el('input', { type: 'text', placeholder });
-  input.value = value || '';
-  input.addEventListener('input', () => onChange(input.value));
-  return input;
-}
-
 // Generic helper to render a repeatable list of objects (services, faq items, etc.)
 function renderRepeater({ container, items, itemLabel, fieldsConfig, onAdd, onRemove }) {
   container.innerHTML = '';
@@ -134,17 +128,76 @@ function renderRepeater({ container, items, itemLabel, fieldsConfig, onAdd, onRe
   container.appendChild(addBtn);
 }
 
+// ---------- Image upload helper (pro galerii) ----------
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadImage(file, folder = 'gallery') {
+  const base64Data = await fileToBase64(file);
+  const res = await fetch('api/upload-image', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getToken()}`
+    },
+    body: JSON.stringify({ fileName: file.name, base64Data, folder })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Nahrání obrázku selhalo.');
+  return data.path;
+}
+
+// Vytvoří tlačítko "Nahrát fotku" s file inputem, náhledem a stavovým hlášením.
+// onUploaded(path) se zavolá po úspěšném nahrání s cestou k souboru v repu.
+function imageUploadButton(onUploaded, label = '+ Nahrát fotku') {
+  const wrap = el('div', { class: 'image-upload' });
+  const input = el('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp,image/gif', style: 'display:none' });
+  const btn = el('button', { class: 'btn-small', type: 'button' }, [document.createTextNode(label)]);
+  const status = el('span', { class: 'upload-status' });
+
+  btn.addEventListener('click', () => input.click());
+  input.addEventListener('change', async () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    status.textContent = 'Nahrávám…';
+    btn.setAttribute('disabled', 'disabled');
+    try {
+      const path = await uploadImage(file);
+      status.textContent = 'Nahráno ✓';
+      onUploaded(path);
+      setTimeout(() => { status.textContent = ''; }, 3000);
+    } catch (err) {
+      status.textContent = 'Chyba: ' + err.message;
+    } finally {
+      btn.removeAttribute('disabled');
+      input.value = '';
+    }
+  });
+
+  wrap.appendChild(input);
+  wrap.appendChild(btn);
+  wrap.appendChild(status);
+  return wrap;
+}
+
 // ---------- Tab panel renderers ----------
 
 const TABS = {
   hero: { title: 'Hero sekce', render: renderHeroTab },
+  aboutfirm: { title: 'O firmě', render: renderAboutFirmTab },
   services: { title: 'Služby', render: renderServicesTab },
   revize: { title: 'Revize', render: renderRevizeTab },
   montaze: { title: 'Montáže', render: renderMontazeTab },
-  whyus: { title: 'Proč my', render: renderWhyUsTab },
-  faq: { title: 'Časté dotazy', render: renderFaqTab },
+  skoleni: { title: 'Školení', render: renderSkoleniTab },
   gallery: { title: 'Galerie', render: renderGalleryTab },
-  about: { title: 'O nás', render: renderAboutTab },
+  reference: { title: 'Reference', render: renderReferenceTab },
   contact: { title: 'Kontakt', render: renderContactTab },
   footer: { title: 'Footer', render: renderFooterTab },
   nav: { title: 'Hlavní menu', render: renderNavTab },
@@ -154,60 +207,64 @@ const TABS = {
 
 function renderHeroTab(root) {
   const h = CONTENT.hero;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Úvodní sekce s videem, které se při scrollu roztahuje, a textem po stranách.')]));
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Úvodní sekce s fotkou na pozadí, hlavním nadpisem a kontakty (telefon, e-mail).')]));
 
   const panel = el('div', { class: 'card-panel' });
-  panel.appendChild(field('Eyebrow (malý text nad videem)', textInput(h.eyebrow, v => h.eyebrow = v)));
-
-  const titleRow = el('div', { class: 'field-row' });
-  titleRow.appendChild(field('Text vlevo', textInput(h.titleLeft, v => h.titleLeft = v)));
-  titleRow.appendChild(field('Text vpravo (zvýrazněný)', textInput(h.titleRight, v => h.titleRight = v)));
-  panel.appendChild(titleRow);
-
-  panel.appendChild(field('Podnadpis (zobrazí se pod videem po rozbalení)', textArea(h.subtitle, v => h.subtitle = v)));
+  panel.appendChild(field('Malý text nad nadpisem', textInput(h.eyebrowTag, v => h.eyebrowTag = v), 'Např. jméno a obor firmy.'));
+  panel.appendChild(field('Hlavní nadpis', textArea(h.title, v => h.title = v), 'Nový řádek v textu = zalomení řádku na webu.'));
+  panel.appendChild(field('Podnadpis', textArea(h.subtitle, v => h.subtitle = v)));
 
   const row = el('div', { class: 'field-row' });
-  row.appendChild(field('Text hlavního tlačítka', textInput(h.primaryButton.label, v => h.primaryButton.label = v)));
-  row.appendChild(field('Odkaz hlavního tlačítka', textInput(h.primaryButton.href, v => h.primaryButton.href = v)));
+  row.appendChild(field('Telefon (zobrazí se jako tlačítko)', textInput(h.phone, v => h.phone = v)));
+  row.appendChild(field('E-mail (zobrazí se jako tlačítko)', textInput(h.email, v => h.email = v)));
   panel.appendChild(row);
 
-  const row2 = el('div', { class: 'field-row' });
-  row2.appendChild(field('Text vedlejšího tlačítka', textInput(h.secondaryButton.label, v => h.secondaryButton.label = v)));
-  row2.appendChild(field('Odkaz vedlejšího tlačítka', textInput(h.secondaryButton.href, v => h.secondaryButton.href = v)));
-  panel.appendChild(row2);
-
-  panel.appendChild(field('Text nápovědy ke scrollování', textInput(h.scrollHint, v => h.scrollHint = v), 'Zobrazí se pod videem, dokud se nerozbalí naplno.'));
+  panel.appendChild(field('Text nápovědy ke scrollování', textInput(h.scrollCueText, v => h.scrollCueText = v)));
   root.appendChild(panel);
 
   const mediaPanel = el('div', { class: 'card-panel' }, [
-    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Video a pozadí')])])
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Pozadí')])])
   ]);
-  mediaPanel.appendChild(field('Odkaz na video (.mp4)', textInput(h.backgroundVideo, v => h.backgroundVideo = v), 'Přímý odkaz na video soubor, které se roztahuje při scrollování.'));
-  mediaPanel.appendChild(field('Poster obrázek videa', textInput(h.backgroundVideoPoster, v => h.backgroundVideoPoster = v), 'Zobrazí se, než se video načte.'));
-  mediaPanel.appendChild(field('Cesta k pozadí sekce (obrázek)', textInput(h.backgroundImage, v => h.backgroundImage = v), 'Jemné pozadí za celou hero sekcí, např. assets/img/hero-bg.jpg'));
+  const bgField = field('Cesta k obrázku na pozadí', textInput(h.backgroundImage, v => { h.backgroundImage = v; }), 'Např. assets/img/hero-bg.jpg');
+  mediaPanel.appendChild(bgField);
+  mediaPanel.appendChild(imageUploadButton((path) => {
+    h.backgroundImage = path;
+    switchTab('hero');
+  }, '+ Nahrát novou fotku pozadí'));
   root.appendChild(mediaPanel);
+}
 
-  const statsPanel = el('div', { class: 'card-panel' }, [
-    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Statistiky (3 čísla v hero sekci)')])])
+function renderAboutFirmTab(root) {
+  const a = CONTENT.aboutFirm;
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Sekce hned pod hero, kde firma stručně popisuje, co dělá.')]));
+
+  const panel = el('div', { class: 'card-panel' });
+  panel.appendChild(field('Eyebrow', textInput(a.eyebrow, v => a.eyebrow = v)));
+  panel.appendChild(field('Nadpis', textInput(a.title, v => a.title = v)));
+  panel.appendChild(field('Text o firmě', textArea(a.text, v => a.text = v)));
+  root.appendChild(panel);
+
+  const badgesPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Čísla / statistiky (3 dlaždice)')])])
   ]);
-  const statsContainer = el('div');
-  statsPanel.appendChild(statsContainer);
-  root.appendChild(statsPanel);
+  const container = el('div');
+  badgesPanel.appendChild(container);
+  root.appendChild(badgesPanel);
 
-  function redrawStats() {
+  function redraw() {
     renderRepeater({
-      container: statsContainer,
-      items: h.stats,
+      container,
+      items: a.badges,
       itemLabel: 'Statistika',
       fieldsConfig: [
         { render: (item) => field('Hodnota', textInput(item.value, v => item.value = v)) },
         { render: (item) => field('Popisek', textInput(item.label, v => item.label = v)) }
       ],
-      onAdd: () => { h.stats.push({ value: '', label: '' }); redrawStats(); },
-      onRemove: (i) => { h.stats.splice(i, 1); redrawStats(); }
+      onAdd: () => { a.badges.push({ value: '', label: '' }); redraw(); },
+      onRemove: (i) => { a.badges.splice(i, 1); redraw(); }
     });
   }
-  redrawStats();
+  redraw();
 }
 
 function renderServicesTab(root) {
@@ -220,7 +277,7 @@ function renderServicesTab(root) {
   panel.appendChild(field('Podnadpis', textArea(s.subtitle, v => s.subtitle = v)));
   root.appendChild(panel);
 
-  const iconOptions = ['bolt', 'plug', 'shield-bolt', 'tool', 'wrench', 'graduation-cap', 'certificate', 'clock', 'file-check', 'map-pin'];
+  const iconOptions = ['bolt', 'plug', 'shield-bolt', 'tool', 'wrench', 'graduation-cap', 'certificate', 'clock', 'file-check', 'map-pin', 'users', 'book-open'];
   const listPanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Jednotlivé služby')])])
   ]);
@@ -256,10 +313,11 @@ function renderServicesTab(root) {
 
 function renderRevizeTab(root) {
   const r = CONTENT.revize;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Sekce vysvětlující druhy revizí, objekty a související legislativu.')]));
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Sekce vysvětlující druhy revizí, důvody, objekty a související legislativu.')]));
 
   const panel = el('div', { class: 'card-panel' });
   panel.appendChild(field('Eyebrow', textInput(r.eyebrow, v => r.eyebrow = v)));
+  panel.appendChild(field('Řádek s normami ČSN', textInput(r.normsLine, v => r.normsLine = v)));
   panel.appendChild(field('Nadpis sekce', textInput(r.title, v => r.title = v)));
   panel.appendChild(field('Úvodní text', textArea(r.intro, v => r.intro = v)));
   root.appendChild(panel);
@@ -267,6 +325,7 @@ function renderRevizeTab(root) {
   const typesPanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Druhy revizí')])])
   ]);
+  typesPanel.appendChild(field('Nadpis nad kartami', textInput(r.typesTitle, v => r.typesTitle = v)));
   const typesContainer = el('div');
   typesPanel.appendChild(typesContainer);
   root.appendChild(typesPanel);
@@ -285,6 +344,28 @@ function renderRevizeTab(root) {
     });
   }
   redrawTypes();
+
+  const whyPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Proč se revize dělají')])])
+  ]);
+  whyPanel.appendChild(field('Nadpis', textInput(r.whyTitle, v => r.whyTitle = v)));
+  const whyContainer = el('div');
+  whyPanel.appendChild(whyContainer);
+  root.appendChild(whyPanel);
+
+  function redrawWhy() {
+    renderRepeater({
+      container: whyContainer,
+      items: r.whyPoints.map(v => ({ value: v })),
+      itemLabel: 'Bod',
+      fieldsConfig: [
+        { render: (item, index) => field('Text', textArea(item.value, v => r.whyPoints[index] = v)) }
+      ],
+      onAdd: () => { r.whyPoints.push(''); redrawWhy(); },
+      onRemove: (i) => { r.whyPoints.splice(i, 1); redrawWhy(); }
+    });
+  }
+  redrawWhy();
 
   const objPanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Objekty, na kterých revidujeme')])])
@@ -363,16 +444,17 @@ function renderMontazeTab(root) {
   redraw();
 }
 
-function renderWhyUsTab(root) {
-  const w = CONTENT.whyUs;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Karty "Proč zvolit nás" — čtveřice argumentů.')]));
+function renderSkoleniTab(root) {
+  const s = CONTENT.skoleni;
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Sekce školení a konzultací.')]));
 
   const panel = el('div', { class: 'card-panel' });
-  panel.appendChild(field('Eyebrow', textInput(w.eyebrow, v => w.eyebrow = v)));
-  panel.appendChild(field('Nadpis sekce', textInput(w.title, v => w.title = v)));
+  panel.appendChild(field('Eyebrow', textInput(s.eyebrow, v => s.eyebrow = v)));
+  panel.appendChild(field('Nadpis sekce', textInput(s.title, v => s.title = v)));
+  panel.appendChild(field('Popis', textArea(s.description, v => s.description = v)));
   root.appendChild(panel);
 
-  const iconOptions = ['certificate', 'clock', 'file-check', 'map-pin', 'bolt', 'shield-bolt', 'tool', 'wrench'];
+  const iconOptions = ['graduation-cap', 'users', 'book-open', 'certificate', 'clock', 'file-check'];
   const listPanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Karty')])])
   ]);
@@ -383,7 +465,7 @@ function renderWhyUsTab(root) {
   function redraw() {
     renderRepeater({
       container,
-      items: w.cards,
+      items: s.items,
       itemLabel: 'Karta',
       fieldsConfig: [
         { render: (item) => field('Název', textInput(item.title, v => item.title = v)) },
@@ -399,56 +481,140 @@ function renderWhyUsTab(root) {
           return field('Ikona', select);
         }}
       ],
-      onAdd: () => { w.cards.push({ icon: 'bolt', title: '', text: '' }); redraw(); },
-      onRemove: (i) => { w.cards.splice(i, 1); redraw(); }
+      onAdd: () => { s.items.push({ icon: 'graduation-cap', title: '', text: '' }); redraw(); },
+      onRemove: (i) => { s.items.splice(i, 1); redraw(); }
     });
   }
   redraw();
 }
 
-function renderFaqTab(root) {
-  const f = CONTENT.faq;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Časté dotazy zobrazené jako rozklikávací seznam.')]));
-
-  const panel = el('div', { class: 'card-panel' });
-  panel.appendChild(field('Eyebrow', textInput(f.eyebrow, v => f.eyebrow = v)));
-  panel.appendChild(field('Nadpis sekce', textInput(f.title, v => f.title = v)));
-  root.appendChild(panel);
-
-  const listPanel = el('div', { class: 'card-panel' }, [
-    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Otázky a odpovědi')])])
-  ]);
-  const container = el('div');
-  listPanel.appendChild(container);
-  root.appendChild(listPanel);
-
-  function redraw() {
-    renderRepeater({
-      container,
-      items: f.items,
-      itemLabel: 'Dotaz',
-      fieldsConfig: [
-        { render: (item) => field('Otázka', textInput(item.question, v => item.question = v)) },
-        { render: (item) => field('Odpověď', textArea(item.answer, v => item.answer = v)) }
-      ],
-      onAdd: () => { f.items.push({ question: '', answer: '' }); redraw(); },
-      onRemove: (i) => { f.items.splice(i, 1); redraw(); }
-    });
-  }
-  redraw();
-}
+// ---------- Galerie s kategoriemi (alba) ----------
 
 function renderGalleryTab(root) {
   const g = CONTENT.gallery;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Fotografie z realizací. Nahrajte obrázky do assets/img a zde zadejte cestu k souboru.')]));
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Galerie je rozdělená do kategorií (alb). Každá kategorie má vlastní sadu fotek, které se zobrazí po rozkliknutí na webu.')]));
 
   const panel = el('div', { class: 'card-panel' });
   panel.appendChild(field('Eyebrow', textInput(g.eyebrow, v => g.eyebrow = v)));
   panel.appendChild(field('Nadpis sekce', textInput(g.title, v => g.title = v)));
+  panel.appendChild(field('Podnadpis', textArea(g.subtitle, v => g.subtitle = v)));
+  root.appendChild(panel);
+
+  const catsPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Kategorie (alba)')])])
+  ]);
+  const container = el('div');
+  catsPanel.appendChild(container);
+  root.appendChild(catsPanel);
+
+  function slugify(text) {
+    return text
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '') || 'kategorie';
+  }
+
+  function redrawCategories() {
+    container.innerHTML = '';
+
+    g.categories.forEach((cat, catIndex) => {
+      const catBody = el('div');
+
+      catBody.appendChild(field('Název kategorie', textInput(cat.name, v => {
+        cat.name = v;
+        if (!cat.id) cat.id = slugify(v);
+      })));
+
+      // Náhled a nahrání titulní fotky kategorie
+      const coverWrap = el('div', { class: 'field-group' }, [
+        el('label', {}, [document.createTextNode('Titulní fotka kategorie')])
+      ]);
+      const coverPreview = el('div', { class: 'cover-preview' });
+      function updateCoverPreview() {
+        coverPreview.innerHTML = '';
+        if (cat.cover) {
+          coverPreview.appendChild(el('img', { src: cat.cover, alt: 'Náhled' }));
+        }
+      }
+      updateCoverPreview();
+      coverWrap.appendChild(coverPreview);
+      coverWrap.appendChild(textInput(cat.cover, v => { cat.cover = v; updateCoverPreview(); }, 'Cesta k obrázku, nebo nahrajte níže'));
+      coverWrap.appendChild(imageUploadButton((path) => {
+        cat.cover = path;
+        redrawCategories();
+      }, '+ Nahrát titulní fotku'));
+      catBody.appendChild(coverWrap);
+
+      catBody.appendChild(field('Popis kategorie (volitelné)', textArea(cat.description || '', v => cat.description = v)));
+
+      // Fotky v albu
+      const imagesWrap = el('div', { class: 'field-group' }, [
+        el('label', {}, [document.createTextNode(`Fotky v albu (${(cat.images || []).length})`)])
+      ]);
+      const imagesGrid = el('div', { class: 'album-grid' });
+
+      function redrawImages() {
+        imagesGrid.innerHTML = '';
+        (cat.images || []).forEach((img, imgIndex) => {
+          const thumb = el('div', { class: 'album-thumb' }, [
+            el('img', { src: img.src, alt: img.alt || '' })
+          ]);
+          const removeBtn = el('button', { class: 'album-thumb-remove', type: 'button', title: 'Odebrat fotku' }, [document.createTextNode('×')]);
+          removeBtn.addEventListener('click', () => {
+            cat.images.splice(imgIndex, 1);
+            redrawImages();
+          });
+          thumb.appendChild(removeBtn);
+          imagesGrid.appendChild(thumb);
+        });
+      }
+      redrawImages();
+      imagesWrap.appendChild(imagesGrid);
+
+      imagesWrap.appendChild(imageUploadButton((path) => {
+        if (!cat.images) cat.images = [];
+        cat.images.push({ src: path, alt: cat.name });
+        redrawImages();
+      }, '+ Přidat fotku do alba'));
+      catBody.appendChild(imagesWrap);
+
+      const removeCatBtn = el('button', { class: 'btn-small danger', type: 'button' }, [document.createTextNode('Odebrat celou kategorii')]);
+      removeCatBtn.addEventListener('click', () => {
+        g.categories.splice(catIndex, 1);
+        redrawCategories();
+      });
+
+      const head = el('div', { class: 'repeater-item-head' }, [
+        el('span', { class: 'tag' }, [document.createTextNode(`Kategorie ${catIndex + 1}`)]),
+        removeCatBtn
+      ]);
+
+      container.appendChild(el('div', { class: 'repeater-item' }, [head, catBody]));
+    });
+
+    const addBtn = el('button', { class: 'add-item-btn', type: 'button' }, [document.createTextNode('+ Přidat novou kategorii')]);
+    addBtn.addEventListener('click', () => {
+      g.categories.push({ id: '', name: 'Nová kategorie', cover: '', description: '', images: [] });
+      redrawCategories();
+    });
+    container.appendChild(addBtn);
+  }
+
+  redrawCategories();
+}
+
+function renderReferenceTab(root) {
+  const r = CONTENT.reference;
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Firmy a objekty, se kterými firma spolupracuje. Na webu plynou ve dvou řadách jako nekonečný pás.')]));
+
+  const panel = el('div', { class: 'card-panel' });
+  panel.appendChild(field('Eyebrow', textInput(r.eyebrow, v => r.eyebrow = v)));
+  panel.appendChild(field('Nadpis sekce', textInput(r.title, v => r.title = v)));
   root.appendChild(panel);
 
   const listPanel = el('div', { class: 'card-panel' }, [
-    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Obrázky')])])
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Reference')])])
   ]);
   const container = el('div');
   listPanel.appendChild(container);
@@ -457,34 +623,22 @@ function renderGalleryTab(root) {
   function redraw() {
     renderRepeater({
       container,
-      items: g.images,
-      itemLabel: 'Obrázek',
+      items: r.items,
+      itemLabel: 'Reference',
       fieldsConfig: [
-        { render: (item) => field('Cesta k souboru', textInput(item.src, v => item.src = v), 'Např. assets/img/gallery-1.jpg') },
-        { render: (item) => field('Alt text (popis pro SEO)', textInput(item.alt, v => item.alt = v)) }
+        { render: (item) => field('Název firmy / objektu', textInput(item.name, v => item.name = v)) },
+        { render: (item) => field('Krátký popis', textInput(item.text, v => item.text = v)) }
       ],
-      onAdd: () => { g.images.push({ src: '', alt: '' }); redraw(); },
-      onRemove: (i) => { g.images.splice(i, 1); redraw(); }
+      onAdd: () => { r.items.push({ name: '', text: '' }); redraw(); },
+      onRemove: (i) => { r.items.splice(i, 1); redraw(); }
     });
   }
   redraw();
 }
 
-function renderAboutTab(root) {
-  const a = CONTENT.about;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Sekce "O nás" s fotografií.')]));
-
-  const panel = el('div', { class: 'card-panel' });
-  panel.appendChild(field('Eyebrow', textInput(a.eyebrow, v => a.eyebrow = v)));
-  panel.appendChild(field('Nadpis', textInput(a.title, v => a.title = v)));
-  panel.appendChild(field('Text', textArea(a.text, v => a.text = v)));
-  panel.appendChild(field('Cesta k fotografii', textInput(a.image, v => a.image = v), 'Např. assets/img/about.jpg'));
-  root.appendChild(panel);
-}
-
 function renderContactTab(root) {
   const c = CONTENT.contact;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Kontaktní údaje a mapa s provozovnou (web funguje jako prezentace firmy, bez poptávkového formuláře).')]));
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Kontaktní údaje a mapa s provozovnou.')]));
 
   const panel = el('div', { class: 'card-panel' });
   panel.appendChild(field('Eyebrow', textInput(c.eyebrow, v => c.eyebrow = v)));
@@ -597,8 +751,9 @@ function renderThemeTab(root) {
   ]);
   const colorLabels = {
     bg: 'Tmavé pozadí (primární)',
+    bgSoft: 'Tmavé pozadí (jemnější odstín)',
     bgLight: 'Světlé pozadí',
-    accent: 'Akcentní barva',
+    accent: 'Akcentní barva (azurová)',
     accentDark: 'Akcentní barva (tmavší)',
     steel: 'Šedá pro texty',
     safe: 'Zelená (OK stavy)',

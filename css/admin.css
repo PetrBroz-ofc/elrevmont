@@ -198,6 +198,36 @@ input, textarea, select { font: inherit; }
 }
 .theme-swatch-row input[type="text"] { flex: 1; font-family: var(--f-mono); }
 
+/* ---------- Image upload / gallery album editing ---------- */
+.image-upload { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.upload-status { font-size: 12.5px; color: var(--c-steel); }
+.cover-preview { margin-bottom: 10px; }
+.cover-preview img {
+  width: 100%; max-width: 220px; height: 130px; object-fit: cover;
+  border-radius: 8px; border: 1px solid var(--c-border);
+}
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.album-thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--c-border);
+}
+.album-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.album-thumb-remove {
+  position: absolute; top: 4px; right: 4px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(16,24,40,0.75); color: #fff;
+  font-size: 15px; line-height: 1; display: flex; align-items: center; justify-content: center;
+}
+.album-thumb-remove:hover { background: var(--c-danger); }
+
 @media (max-width: 900px) {
   .admin-app { flex-direction: column; }
   .admin-sidebar { width: 100%; height: auto; position: relative; }

@@ -18,37 +18,39 @@ admin.html           administrace (samostatná stránka, mimo index)
 css/style.css         styly veřejného webu
 css/admin.css         styly administrace
 js/main.js            renderer veřejného webu (čte data/content.json)
-js/hero-expand.js      scroll-expand efekt hero videa (vanilla JS, bez frameworku)
-js/admin.js            logika administrace (login, formuláře, ukládání)
+js/admin.js            logika administrace (login, formuláře, ukládání, upload fotek)
 js/icons.js            sada SVG ikon
 data/content.json      veškerý textový/obsahový obsah webu
 data/theme.json         barvy a fonty
 api/login.js            serverless funkce — ověření hesla admina
-api/save.js              serverless funkce — commit změn do GitHubu
+api/save.js              serverless funkce — commit JSON změn do GitHubu
+api/upload-image.js      serverless funkce — nahrání fotek do assets/img/gallery
 assets/img/              obrázky (hero pozadí, galerie, o nás...)
 ```
 
-## Hero sekce — scroll-expand video
+## Struktura webu (9 hlavních sekcí)
 
-Úvodní sekce používá efekt inspirovaný komponentou "ScrollExpandMedia", ale
-přepsaný do čistého vanilla JS (`js/hero-expand.js`) bez Reactu, Next.js nebo
-Framer Motion — aby zůstala zachována architektura statického webu.
+1. **Hero** — fotka na pozadí, jméno firmy, hlavní nadpis, tlačítka telefon/e-mail
+2. **O firmě** — stručný popis činnosti + 3 statistiky
+3. **Služby** — 6 karet nabízených služeb
+4. **Revize** — základní informace, druhy revizí, proč se dělají, objekty, legislativa
+5. **Montáže** — popis + seznam typů objektů
+6. **Školení** — 3 karty (vyhláška, individuální školení, konzultace)
+7. **Galerie** — kategorie/alba fotografií, klik na kategorii otevře lightbox se všemi fotkami
+8. **Reference** — firmy/objekty ve dvou nekonečných pásech (marquee), plynou proti sobě
+9. **Kontakt** — kontaktní údaje + Google mapa s provozovnou
 
-Chování: video v malém boxu se při scrollování postupně roztahuje na celou
-šířku/výšku obrazovky. Přes video se rozjíždí text — vlevo "Milan", vpravo
-"Dolenský" (nastavitelné v adminu, záložka Hero → `titleLeft` / `titleRight`
-v `data/content.json`). Po plném rozbalení videa se odemkne normální scroll
-a zobrazí se zbytek hero obsahu (podnadpis, tlačítka, statistiky) a dále
-navazují ostatní sekce webu (Služby, Revize, Montáže, O nás, FAQ, Kontakt...).
+## Galerie — kategorie a nahrávání fotek
 
-Video je aktuálně nastaveno na volně dostupný stock klip z Pexels
-(technik u elektro rozvaděče, licence Pexels — volné komerční i nekomerční
-užití bez nutnosti atribuce):
-```
-https://videos.pexels.com/video-files/28886877/12504681_1920_1080_30fps.mp4
-```
-Odkaz na video lze kdykoliv změnit v adminu (záložka Hero → „Odkaz na video“)
-nebo přímo v `data/content.json` (`hero.backgroundVideo`).
+V adminu (záložka Galerie) lze vytvářet libovolný počet kategorií (alb). Každá
+kategorie má název, titulní fotku a sadu fotek uvnitř alba. Fotky se nahrávají
+přímo z počítače tlačítkem „Nahrát fotku“ — soubor se pošle na
+`/api/upload-image`, ta ho uloží do `assets/img/gallery/` v GitHub repozitáři
+a vrátí cestu, kterou si admin panel sám doplní do JSONu. Podporované formáty:
+JPG, PNG, WEBP, GIF (max. cca 6 MB na soubor).
+
+Na webu se kategorie zobrazí jako dlaždice s náhledem; klik na dlaždici otevře
+lightbox se všemi fotkami dané kategorie.
 
 ## Kontaktní sekce — mapa místo formuláře
 
@@ -84,7 +86,9 @@ proměnné načetly do serverless funkcí.
 4. `/api/save` ověří token, ověří že jde o povolený soubor (`data/content.json`
    nebo `data/theme.json`), zvaliduje JSON a přes GitHub Contents API vytvoří
    commit s novým obsahem.
-5. Vercel díky napojení na GitHub repo automaticky nasadí novou verzi webu.
+5. Nahrávání fotek do galerie jde samostatnou cestou přes `/api/upload-image`
+   (viz sekce výše) — probíhá okamžitě při výběru souboru, ne až při „Uložit změny“.
+6. Vercel díky napojení na GitHub repo automaticky nasadí novou verzi webu.
 
 ## Lokální vývoj
 
@@ -108,5 +112,5 @@ a do `.env.local` doplňte stejné proměnné jako výše.
 
 Zatím jsou v `data/content.json` použity placeholder cesty
 (`assets/img/hero-bg.jpg`, `assets/img/gallery-1.jpg` atd.). Nahrajte reálné
-fotografie do `assets/img/` se stejnými názvy, nebo cesty upravte přímo
-v administraci (sekce Galerie / Hero / O nás).
+fotografie přímo v administraci (sekce Hero pro fotku na pozadí, sekce Galerie
+pro kategorie a alba fotek).

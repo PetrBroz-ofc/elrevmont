@@ -20,7 +20,10 @@
 <!-- NAVBAR -->
 <header class="navbar">
   <div class="container navbar-inner">
-    <a href="#hero" class="logo"><span class="dot"></span><span id="nav-logo">ELREVMONT</span></a>
+    <a href="#hero" class="logo">
+      <span class="logo-icon" id="logo-icon"></span>
+      <span id="nav-logo">ELREVMONT</span>
+    </a>
     <nav class="nav-links" id="nav-links"></nav>
     <a href="#kontakt" class="btn btn-primary nav-cta" id="nav-cta">Kontakt</a>
     <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
@@ -29,72 +32,65 @@
   </div>
 </header>
 
-<!-- HERO — scroll-expand video -->
-<section class="hero-expand" id="hero">
-  <div class="hero-expand-inner">
-
-    <!-- Statické pozadí sekce (jemné, pod expandujícím videem) -->
-    <div class="hero-expand-bg" id="hero-bg" aria-hidden="true"></div>
-
-    <!-- Expandující video/media box -->
-    <div class="hero-media-stage">
-      <div class="hero-media-box" id="hero-media-box">
-        <video
-          id="hero-video"
-          class="hero-media-video"
-          muted
-          loop
-          playsinline
-          autoplay
-          preload="auto"
-        ></video>
-        <div class="hero-media-overlay"></div>
-      </div>
-
-      <!-- Text rozjíždějící se do stran přes video -->
-      <div class="hero-split-title" id="hero-split-title">
-        <span class="hero-split-word hero-split-left" id="hero-title-left"></span>
-        <span class="hero-split-word hero-split-right" id="hero-title-right"></span>
-      </div>
-
-      <p class="hero-scroll-hint" id="hero-scroll-hint"></p>
+<!-- 1. HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg-image" id="hero-bg"></div>
+  <div class="container hero-inner">
+    <span class="hero-eyebrow-tag" id="hero-eyebrow"></span>
+    <h1 class="hero-title" id="hero-title"></h1>
+    <p class="hero-subtitle" id="hero-subtitle"></p>
+    <div class="hero-actions">
+      <a href="tel:" class="btn btn-primary" id="hero-btn-phone"></a>
+      <a href="mailto:" class="btn hero-btn-secondary" id="hero-btn-email"></a>
     </div>
+  </div>
+  <div class="hero-scroll-cue" id="hero-scroll-cue"></div>
+</section>
 
-    <!-- Obsah pod expandovaným videem -->
-    <div class="container hero-content" id="hero-content">
-      <div class="eyebrow" id="hero-eyebrow"></div>
-      <p class="hero-subtitle" id="hero-subtitle"></p>
-      <div class="hero-actions">
-        <a href="#sluzby" class="btn btn-primary" id="hero-btn-primary"></a>
-        <a href="#kontakt" class="btn btn-outline-dark" id="hero-btn-secondary"></a>
-      </div>
-      <div class="hero-stats" id="hero-stats"></div>
+<!-- 2. O FIRMĚ -->
+<section class="about-firm py" id="o-firme">
+  <div class="container about-firm-inner">
+    <div data-reveal>
+      <div class="eyebrow" id="aboutfirm-eyebrow"></div>
+      <h2 class="section-title" id="aboutfirm-title"></h2>
     </div>
-
+    <div data-reveal>
+      <p class="about-firm-text" id="aboutfirm-text"></p>
+      <div class="about-firm-badges" id="aboutfirm-badges" style="margin-top:32px"></div>
+    </div>
   </div>
 </section>
 
-<!-- SERVICES -->
+<!-- 3. SLUŽBY -->
 <section class="services py" id="sluzby">
   <div class="container">
     <div class="section-head" data-reveal>
-      <div class="eyebrow" id="services-eyebrow"></div>
-      <h2 class="section-title" id="services-title"></h2>
-      <p class="section-subtitle" id="services-subtitle"></p>
+      <div class="eyebrow on-dark" id="services-eyebrow"></div>
+      <h2 class="section-title" id="services-title" style="color:#F5F7FA"></h2>
+      <p class="section-subtitle" id="services-subtitle" style="color:rgba(245,247,250,0.65)"></p>
     </div>
     <div class="services-grid" id="services-grid"></div>
   </div>
 </section>
 
-<!-- REVIZE -->
-<section class="revize py stamp-frame" id="revize">
+<!-- 4. REVIZE -->
+<section class="revize py" id="revize">
   <div class="container">
     <div class="section-head" data-reveal>
       <div class="eyebrow" id="revize-eyebrow"></div>
+      <p class="eyebrow" style="font-size:12px;opacity:0.75" id="revize-norms"></p>
       <h2 class="section-title" id="revize-title"></h2>
       <p class="revize-intro" id="revize-intro"></p>
     </div>
+
+    <h4 style="font-family:var(--f-mono);font-size:13px;letter-spacing:0.05em;text-transform:uppercase;color:var(--c-steel);margin-bottom:20px" id="revize-types-title"></h4>
     <div class="revize-types" id="revize-types"></div>
+
+    <div class="revize-why" data-reveal>
+      <h3 id="revize-why-title"></h3>
+      <ul class="revize-why-list" id="revize-why-list"></ul>
+    </div>
+
     <div class="revize-columns">
       <div>
         <h4 id="revize-objects-title"></h4>
@@ -108,72 +104,72 @@
   </div>
 </section>
 
-<!-- MONTAZE -->
+<!-- 5. MONTAZE -->
 <section class="montaze py" id="montaze">
   <div class="container montaze-inner">
     <div data-reveal>
-      <div class="eyebrow" id="montaze-eyebrow"></div>
-      <h2 class="section-title" id="montaze-title"></h2>
+      <div class="eyebrow on-dark" id="montaze-eyebrow"></div>
+      <h2 class="section-title" id="montaze-title" style="color:#F5F7FA"></h2>
       <p class="montaze-desc" id="montaze-desc"></p>
     </div>
     <ul class="montaze-list" id="montaze-list"></ul>
   </div>
 </section>
 
-<!-- WHY US -->
-<section class="why-us py stamp-frame" id="proc-my">
+<!-- 6. SKOLENI -->
+<section class="skoleni py" id="skoleni">
   <div class="container">
     <div class="section-head" data-reveal>
-      <div class="eyebrow" id="whyus-eyebrow"></div>
-      <h2 class="section-title" id="whyus-title" style="max-width:520px"></h2>
+      <div class="eyebrow" id="skoleni-eyebrow"></div>
+      <h2 class="section-title" id="skoleni-title"></h2>
+      <p class="skoleni-desc" id="skoleni-desc"></p>
     </div>
-    <div class="why-grid" id="whyus-grid"></div>
+    <div class="skoleni-grid" id="skoleni-grid"></div>
   </div>
 </section>
 
-<!-- GALLERY -->
-<section class="gallery py" id="reference">
+<!-- 7. GALERIE -->
+<section class="gallery py" id="galerie">
   <div class="container">
-    <div class="section-head" data-reveal style="color:#F7F8FA">
+    <div class="section-head" data-reveal>
       <div class="eyebrow" id="gallery-eyebrow"></div>
-      <h2 class="section-title" id="gallery-title" style="color:#F7F8FA"></h2>
+      <h2 class="section-title" id="gallery-title"></h2>
+      <p class="section-subtitle" id="gallery-subtitle"></p>
     </div>
-    <div class="gallery-grid" id="gallery-grid"></div>
+    <div class="gallery-categories" id="gallery-categories"></div>
+  </div>
+
+  <!-- Lightbox / album detail -->
+  <div class="gallery-lightbox" id="gallery-lightbox">
+    <div class="gallery-lightbox-header">
+      <h3 id="lightbox-title"></h3>
+      <button class="gallery-lightbox-close" id="lightbox-close" aria-label="Zavřít"></button>
+    </div>
+    <div class="gallery-lightbox-grid" id="lightbox-grid"></div>
   </div>
 </section>
 
-<!-- ABOUT -->
-<section class="about py" id="o-nas">
-  <div class="container about-inner">
-    <div data-reveal>
-      <div class="eyebrow" id="about-eyebrow"></div>
-      <h2 class="section-title" id="about-title"></h2>
-      <p class="about-text" id="about-text"></p>
-    </div>
-    <div class="about-img" data-reveal>
-      <img id="about-img" src="" alt="">
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="faq py" id="faq">
+<!-- 8. REFERENCE -->
+<section class="reference py" id="reference">
   <div class="container">
     <div class="section-head" data-reveal>
-      <div class="eyebrow" id="faq-eyebrow"></div>
-      <h2 class="section-title" id="faq-title"></h2>
+      <div class="eyebrow on-dark" id="reference-eyebrow"></div>
+      <h2 class="section-title" id="reference-title" style="color:#F5F7FA"></h2>
     </div>
-    <div class="faq-list" id="faq-list"></div>
+  </div>
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marquee-row-1"></div>
+    <div class="marquee-track reverse" id="marquee-row-2"></div>
   </div>
 </section>
 
-<!-- CONTACT -->
-<section class="contact py stamp-frame" id="kontakt">
+<!-- 9. KONTAKT -->
+<section class="contact py" id="kontakt">
   <div class="container contact-inner">
     <div data-reveal>
       <div class="eyebrow" id="contact-eyebrow"></div>
-      <h2 class="section-title" id="contact-title" style="color:#F7F8FA"></h2>
-      <p class="section-subtitle" id="contact-subtitle" style="color:rgba(247,248,250,0.7)"></p>
+      <h2 class="section-title" id="contact-title"></h2>
+      <p class="section-subtitle" id="contact-subtitle"></p>
       <div id="contact-info"></div>
     </div>
     <div class="contact-map" data-reveal>
@@ -198,7 +194,10 @@
   <div class="container">
     <div class="footer-inner">
       <div class="footer-brand">
-        <div class="logo" style="color:#F7F8FA"><span class="dot"></span><span id="footer-name"></span></div>
+        <div class="logo" style="color:#F5F7FA">
+          <span class="logo-icon" id="footer-logo-icon"></span>
+          <span id="footer-name"></span>
+        </div>
         <p class="footer-tagline" id="footer-tagline"></p>
       </div>
       <nav class="footer-links" id="footer-links"></nav>
@@ -208,7 +207,6 @@
 </footer>
 
 <script src="js/icons.js"></script>
-<script src="js/hero-expand.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

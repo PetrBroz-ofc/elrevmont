@@ -1,12 +1,12 @@
 {
   "meta": {
-    "siteName": "ELEKTRO REVIZE MONTÁŽE",
+    "siteName": "ELREVMONT",
     "companyName": "Milan Dolenský – elektro",
-    "tagline": "Revize a montáže elektro Liberec",
-    "lastUpdated": "2026-07-03"
+    "tagline": "Elektro revize a montáže Liberec",
+    "lastUpdated": "2026-07-04"
   },
   "seo": {
-    "title": "Elektro Revize Montáže Liberec | Milan Dolenský",
+    "title": "Elektro revize a montáže Liberec | Milan Dolenský",
     "description": "Revize elektroinstalací, spotřebičů a hromosvodů, elektromontáže, servis a školení v Liberci a okolí. Přes 20 let praxe, revize dle ČSN 33 2000-6.",
     "keywords": "revize elektro Liberec, revizní technik, revize hromosvodu, revize spotřebičů, elektromontáže Liberec, Milan Dolenský",
     "ogImage": "assets/img/og-image.jpg"
@@ -17,27 +17,30 @@
       { "label": "Úvod", "href": "#hero" },
       { "label": "Revize", "href": "#revize" },
       { "label": "Montáže", "href": "#montaze" },
-      { "label": "Proč my", "href": "#proc-my" },
-      { "label": "Reference", "href": "#reference" },
+      { "label": "Galerie", "href": "#galerie" },
+      { "label": "Školení", "href": "#skoleni" },
+      { "label": "Servis", "href": "#sluzby" },
       { "label": "Kontakt", "href": "#kontakt" }
     ],
     "ctaLabel": "Kontakt"
   },
   "hero": {
-    "eyebrow": "ČSN 33 2000-6 · ČSN 33 1500 · ČSN 33 1600 ed.2",
-    "titleLeft": "Milan",
-    "titleRight": "Dolenský",
-    "subtitle": "Revize elektroinstalací, elektrických zařízení, spotřebičů a hromosvodů. Elektromontáže, servis i školení v Liberci a okolí.",
-    "primaryButton": { "label": "Naše služby", "href": "#sluzby" },
-    "secondaryButton": { "label": "Kontakt", "href": "#kontakt" },
+    "eyebrowTag": "Milan Dolenský – elektro",
+    "title": "Elektro revize\na montáže",
+    "subtitle": "Provádíme revize elektroinstalací, elektrických zařízení a spotřebičů, ochrany před bleskem. Elektromontážní práce, servis a školení v oblasti elektro.",
+    "phone": "+420 604 530 872",
+    "email": "elrevmont@volny.cz",
     "backgroundImage": "assets/img/hero-bg.jpg",
-    "backgroundVideo": "https://videos.pexels.com/video-files/28886877/12504681_1920_1080_30fps.mp4",
-    "backgroundVideoPoster": "assets/img/hero-bg.jpg",
-    "scrollHint": "Posuňte pro rozbalení",
-    "stats": [
+    "scrollCueText": "Posuňte dolů"
+  },
+  "aboutFirm": {
+    "eyebrow": "O nás",
+    "title": "Provádíme revize elektro a hromosvodů",
+    "text": "Provádíme revize elektroinstalací, elektrických zařízení, elektrických spotřebičů, ochrany před bleskem (hromosvodů). Dále provádíme elektromontážní práce, montáže ochrany před bleskem (hromosvodů), servis a údržbu zařízení (do 35 kV a elektrická zařízení v prostředí s nebezpečím výbuchu). Dále provádíme školení vyhlášky č. 50/1978 Sb. a individuální školení a konzultace v oblasti elektro.",
+    "badges": [
       { "value": "20+", "label": "let praxe v oboru" },
       { "value": "35 kV", "label": "rozsah oprávnění" },
-      { "value": "100%", "label": "dle platných norem ČSN" }
+      { "value": "100%", "label": "dle norem ČSN" }
     ]
   },
   "services": {
@@ -79,34 +82,42 @@
   },
   "revize": {
     "eyebrow": "Revize",
-    "title": "Proč a jak revize probíhá",
-    "intro": "Účelem revize elektrických zařízení je ověření jejich stavu z hlediska bezpečnosti. Provádíme ji v souladu s ČSN 33 2000-6 ed. 2, ČSN 33 1500 a ČSN 33 1600 ed. 2.",
+    "title": "Základní informace",
+    "normsLine": "ČSN 33 2000-6 ed. 2 · ČSN 33 1500 · ČSN 33 1600 ed. 2",
+    "intro": "Revize (verification) – všechna opatření, kterými se ověřuje shoda hotové elektrické instalace s příslušnými požadavky IEC 60364. Účelem revize elektrických zařízení je ověřování jejich stavu z hlediska bezpečnosti. Požadavky bezpečnosti se považují za splněné, pokud elektrické zařízení odpovídá z hlediska bezpečnosti příslušným ustanovením norem – revize elektrického spotřebiče (ruční vrtačka, počítač, monitor, bruska, tiskárna, prodlužovací přívod atd.).",
+    "typesTitle": "Druhy revizí",
     "types": [
       {
         "title": "Výchozí revize",
-        "description": "Nová elektrická zařízení lze uvést do provozu jen tehdy, byl-li jejich stav ověřen výchozí revizí, popř. doložen dokladem dle platných předpisů."
+        "description": "Nová elektrická zařízení je možné uvést do provozu jen tehdy, byl-li jejich stav z hlediska bezpečnosti ověřen výchozí revizí, popř. ověřen a doložen dokladem v souladu s požadavky stanovenými zvláštními právními předpisy."
       },
       {
         "title": "Pravidelné revize",
-        "description": "Provozovaná zařízení musí být pravidelně revidována. Lhůty se stanovují dle plánu revizí s ohledem na druh zařízení, provoz a vnější vlivy."
+        "description": "Provozovaná elektrická zařízení musí být pravidelně revidována. Lhůty revizí se stanovují dle plánu revizí vypracovaného provozovatelem zařízení s ohledem na vnější vlivy. Lhůty se určují podle druhu instalace a zařízení, jejího použití, způsobu provozu, četnosti a kvality údržby."
       },
       {
         "title": "Mimořádné revize",
-        "description": "Provádí se kromě výchozích a pravidelných revizí v případech, kdy je to vyžadováno právním předpisem nebo okolnostmi provozu."
+        "description": "Kromě výchozích a pravidelných revizí se na elektrických zařízeních mohou, nebo dokonce v případech, kdy je to vyžadováno právním předpisem, musí provádět i mimořádné revize."
       }
     ],
+    "whyTitle": "Proč mají být revize prováděny?",
+    "whyPoints": [
+      "Zaměstnavatel je povinen zajistit, aby stroje, technická zařízení, dopravní prostředky a nářadí byly z hlediska bezpečnosti pravidelně a řádně udržovány, kontrolovány a revidovány.",
+      "Zaměstnavatel je povinen vytvářet bezpečné a zdraví neohrožující pracovní prostředí a pracovní podmínky vhodnou organizací bezpečnosti a ochrany zdraví při práci a přijímáním opatření k předcházení rizikům.",
+      "U zařízení musí být před jeho uvedením do provozu osvědčena jeho bezpečnost v rozsahu a za podmínek stanovených právními a ostatními předpisy k zajištění bezpečnosti a ochrany zdraví při práci a v souladu s technickou dokumentací; osvědčení provádí revizní technik s platným osvědčením příslušného druhu a rozsahu."
+    ],
     "objects": {
-      "title": "Revidujeme elektro a hromosvody na těchto objektech",
+      "title": "Provádíme revize elektro a ochrany před bleskem u těchto objektů a zařízení",
       "list": [
         "Rodinné domy",
         "Byty a bytové domy",
         "Výrobní a opravárenské objekty",
         "Průmyslové objekty",
         "Stomatologické ordinace",
-        "Školy a školky",
+        "Školy, školky",
         "Kancelářské objekty",
         "Čerpací stanice pohonných hmot",
-        "Objekty s nebezpečím výbuchu"
+        "Objekty s prostředím nebezpečí výbuchu"
       ]
     },
     "legislation": {
@@ -132,77 +143,77 @@
       "Kancelářské objekty"
     ]
   },
-  "whyUs": {
-    "eyebrow": "Proč my",
-    "title": "Jistota, na kterou se dá spolehnout",
-    "cards": [
-      {
-        "icon": "certificate",
-        "title": "Platná osvědčení",
-        "text": "Revize provádí revizní technik s platným osvědčením příslušného druhu a rozsahu – včetně zařízení do 35 kV."
-      },
-      {
-        "icon": "clock",
-        "title": "Dodržené lhůty",
-        "text": "Hlídáme lhůty pravidelných revizí podle druhu zařízení, provozu a vnějších vlivů, abyste měli klid od kontrol."
-      },
-      {
-        "icon": "file-check",
-        "title": "Kompletní dokumentace",
-        "text": "Ke každé revizi dostanete revizní zprávu odpovídající požadavkům IEC 60364 a platné legislativě."
-      },
-      {
-        "icon": "map-pin",
-        "title": "Liberecký kraj",
-        "text": "Působíme v Liberci a okolí, provozovna na Pšeničné ulici. Rychlá dostupnost a osobní přístup."
-      }
-    ]
-  },
-  "faq": {
-    "eyebrow": "Časté dotazy",
-    "title": "Co byste měli vědět",
+  "skoleni": {
+    "eyebrow": "Vzdělávání a odbornost",
+    "title": "Školení",
+    "description": "Provádíme školení vyhlášky č. 50/1978 Sb. a individuální školení a konzultace v oblasti elektro.",
     "items": [
       {
-        "question": "Jak často je potřeba dělat pravidelnou revizi elektroinstalace?",
-        "answer": "Lhůty se určují podle druhu instalace, způsobu provozu, četnosti údržby a vnějších vlivů, kterým je instalace vystavena. Konkrétní lhůtu vám rádi stanovíme na základě prohlídky objektu."
+        "icon": "graduation-cap",
+        "title": "Vyhláška č. 50/1978 Sb.",
+        "text": "Školení a přezkušování odborné způsobilosti v elektrotechnice dle platné legislativy."
       },
       {
-        "question": "Musím mít revizi i na běžné spotřebiče v kanceláři?",
-        "answer": "Ano, revize se týká i elektrických spotřebičů a ručního nářadí – například počítačů, tiskáren, varných konvic nebo prodlužovacích přívodů, pokud jsou používány v pracovním prostředí."
+        "icon": "users",
+        "title": "Individuální školení",
+        "text": "Školení na míru dle specifických požadavků vašeho provozu a pracovního prostředí."
       },
       {
-        "question": "Provádíte revize i v prostředí s nebezpečím výbuchu?",
-        "answer": "Ano, provádíme revize a servis elektrických zařízení v prostředí s nebezpečím výbuchu i zařízení do 35 kV, včetně čerpacích stanic pohonných hmot."
-      },
-      {
-        "question": "Co je výstupem revize?",
-        "answer": "Výstupem je revizní zpráva dokládající stav zařízení z hlediska bezpečnosti dle příslušných norem a případný soupis zjištěných závad s doporučením k jejich odstranění."
-      },
-      {
-        "question": "Nabízíte i školení pro zaměstnance?",
-        "answer": "Ano, provádíme školení dle vyhlášky č. 50/1978 Sb. a individuální školení a konzultace v oblasti elektro přímo na míru vaší firmě."
+        "icon": "book-open",
+        "title": "Konzultace",
+        "text": "Odborné konzultace v oblasti elektro – návrhy řešení, posouzení stavu, doporučení."
       }
     ]
   },
   "gallery": {
     "eyebrow": "Z naší práce",
-    "title": "Reference",
-    "images": [
-      { "src": "assets/img/gallery-1.jpg", "alt": "Revize rozvaděče" },
-      { "src": "assets/img/gallery-2.jpg", "alt": "Elektromontážní práce" },
-      { "src": "assets/img/gallery-3.jpg", "alt": "Revize hromosvodu" },
-      { "src": "assets/img/gallery-4.jpg", "alt": "Servis elektro zařízení" }
+    "title": "Galerie",
+    "subtitle": "Ukázky realizací podle typu objektu. Klikněte na kategorii pro zobrazení fotografií.",
+    "categories": [
+      {
+        "id": "rodinne-domy",
+        "name": "Rodinné domy",
+        "cover": "assets/img/gallery-1.jpg",
+        "description": "Revize a montáže elektroinstalací v rodinných domech.",
+        "images": [
+          { "src": "assets/img/gallery-1.jpg", "alt": "Rodinný dům – elektroinstalace" }
+        ]
+      },
+      {
+        "id": "prumyslove-objekty",
+        "name": "Průmyslové objekty",
+        "cover": "assets/img/gallery-2.jpg",
+        "description": "Revize a servis elektro v průmyslových provozech.",
+        "images": [
+          { "src": "assets/img/gallery-2.jpg", "alt": "Průmyslový objekt – elektro" }
+        ]
+      },
+      {
+        "id": "hromosvody",
+        "name": "Hromosvody",
+        "cover": "assets/img/gallery-3.jpg",
+        "description": "Montáže a revize ochrany před bleskem.",
+        "images": [
+          { "src": "assets/img/gallery-3.jpg", "alt": "Revize hromosvodu" }
+        ]
+      }
     ]
   },
-  "about": {
-    "eyebrow": "O nás",
-    "title": "Milan Dolenský – elektro",
-    "text": "Provozovna Elrevmont v Liberci se dlouhodobě věnuje revizím a montážím elektrických zařízení pro domácnosti, firmy i průmyslové provozy. Praxe v oboru a platná oprávnění jsou zárukou, že vaše zařízení odpovídá bezpečnostním normám.",
-    "image": "assets/img/about.jpg"
+  "reference": {
+    "eyebrow": "Reference",
+    "title": "Firmy a objekty, se kterými spolupracujeme",
+    "items": [
+      { "name": "Jafadent s.r.o.", "text": "Stomatologické ordinace – kompletní elektro dodávka" },
+      { "name": "Výrobní provozy", "text": "Pravidelné revize a servis elektro" },
+      { "name": "Bytová družstva", "text": "Revize elektroinstalací bytových domů" },
+      { "name": "Čerpací stanice", "text": "Revize v prostředí s nebezpečím výbuchu" },
+      { "name": "Školy a školky", "text": "Revize elektro a pravidelný servis" },
+      { "name": "Kancelářské objekty", "text": "Revize spotřebičů a elektroinstalací" }
+    ]
   },
   "contact": {
-    "eyebrow": "Kontakt",
-    "title": "Kde nás najdete",
+    "eyebrow": "Spojte se s námi",
+    "title": "Kontakt",
     "subtitle": "Ozvěte se telefonicky nebo e-mailem. Provozovna sídlí na Pšeničné ulici v Liberci.",
     "phone": "+420 604 530 872",
     "email": "elrevmont@volny.cz",
