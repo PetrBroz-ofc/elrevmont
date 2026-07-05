@@ -335,6 +335,9 @@ function renderFooter(data) {
   f.links.forEach(l => {
     links.appendChild(el('a', { href: l.href }, [document.createTextNode(l.label)]));
   });
+
+  const adminIcon = document.getElementById('footer-admin-icon');
+  if (adminIcon) adminIcon.innerHTML = getIcon('lock');
 }
 
 function setupNavToggle() {

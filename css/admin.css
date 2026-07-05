@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --c-bg: #0B1A2B;
+  --c-bg: #0A1628;
   --c-panel: #FFFFFF;
   --c-page: #F2F4F7;
-  --c-accent: #F2B705;
-  --c-accent-dark: #C9950A;
-  --c-steel: #5A6B7A;
+  --c-accent: #2E9BF0;
+  --c-accent-dark: #1C7DD1;
+  --c-steel: #64748B;
   --c-border: #E4E7EC;
-  --c-text: #101820;
+  --c-text: #101828;
   --c-danger: #E15353;
   --c-success: #1E8E5A;
   --f-display: 'Space Grotesk', sans-serif;
@@ -21,6 +21,11 @@
 body { font-family: var(--f-body); background: var(--c-page); color: var(--c-text); }
 button { font: inherit; cursor: pointer; }
 input, textarea, select { font: inherit; }
+
+/* Atribut [hidden] musí mít vždy přednost před display: flex/grid
+   nastaveným v komponentových pravidlech níže — jinak se prvek
+   nikdy doopravdy neskryje. */
+[hidden] { display: none !important; }
 
 /* ---------- Login ---------- */
 .login-screen {
