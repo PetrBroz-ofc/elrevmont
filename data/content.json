@@ -14,13 +14,34 @@
   "nav": {
     "logo": "ELREVMONT",
     "links": [
-      { "label": "Úvod", "href": "#hero" },
-      { "label": "Revize", "href": "#revize" },
-      { "label": "Montáže", "href": "#montaze" },
-      { "label": "Galerie", "href": "#galerie" },
-      { "label": "Školení", "href": "#skoleni" },
-      { "label": "Servis", "href": "#sluzby" },
-      { "label": "Kontakt", "href": "#kontakt" }
+      {
+        "label": "Úvod",
+        "href": "#hero"
+      },
+      {
+        "label": "Revize",
+        "href": "#revize"
+      },
+      {
+        "label": "Montáže",
+        "href": "#montaze"
+      },
+      {
+        "label": "Galerie",
+        "href": "#galerie"
+      },
+      {
+        "label": "Školení",
+        "href": "#skoleni"
+      },
+      {
+        "label": "Servis",
+        "href": "#sluzby"
+      },
+      {
+        "label": "Kontakt",
+        "href": "#kontakt"
+      }
     ],
     "ctaLabel": "Kontakt"
   },
@@ -38,9 +59,18 @@
     "title": "Provádíme revize elektro a hromosvodů",
     "text": "Provádíme revize elektroinstalací, elektrických zařízení, elektrických spotřebičů, ochrany před bleskem (hromosvodů). Dále provádíme elektromontážní práce, montáže ochrany před bleskem (hromosvodů), servis a údržbu zařízení (do 35 kV a elektrická zařízení v prostředí s nebezpečím výbuchu). Dále provádíme školení vyhlášky č. 50/1978 Sb. a individuální školení a konzultace v oblasti elektro.",
     "badges": [
-      { "value": "20+", "label": "let praxe v oboru" },
-      { "value": "35 kV", "label": "rozsah oprávnění" },
-      { "value": "100%", "label": "dle norem ČSN" }
+      {
+        "value": "20+",
+        "label": "Spokojených firem"
+      },
+      {
+        "value": "35 kV",
+        "label": "rozsah oprávnění"
+      },
+      {
+        "value": "100%",
+        "label": "dle norem ČSN"
+      }
     ]
   },
   "services": {
@@ -176,7 +206,10 @@
         "cover": "assets/img/gallery-1.jpg",
         "description": "Revize a montáže elektroinstalací v rodinných domech.",
         "images": [
-          { "src": "assets/img/gallery-1.jpg", "alt": "Rodinný dům – elektroinstalace" }
+          {
+            "src": "assets/img/gallery-1.jpg",
+            "alt": "Rodinný dům – elektroinstalace"
+          }
         ]
       },
       {
@@ -185,7 +218,10 @@
         "cover": "assets/img/gallery-2.jpg",
         "description": "Revize a servis elektro v průmyslových provozech.",
         "images": [
-          { "src": "assets/img/gallery-2.jpg", "alt": "Průmyslový objekt – elektro" }
+          {
+            "src": "assets/img/gallery-2.jpg",
+            "alt": "Průmyslový objekt – elektro"
+          }
         ]
       },
       {
@@ -194,7 +230,10 @@
         "cover": "assets/img/gallery-3.jpg",
         "description": "Montáže a revize ochrany před bleskem.",
         "images": [
-          { "src": "assets/img/gallery-3.jpg", "alt": "Revize hromosvodu" }
+          {
+            "src": "assets/img/gallery-3.jpg",
+            "alt": "Revize hromosvodu"
+          }
         ]
       }
     ]
@@ -203,12 +242,30 @@
     "eyebrow": "Reference",
     "title": "Firmy a objekty, se kterými spolupracujeme",
     "items": [
-      { "name": "Jafadent s.r.o.", "text": "Stomatologické ordinace – kompletní elektro dodávka" },
-      { "name": "Výrobní provozy", "text": "Pravidelné revize a servis elektro" },
-      { "name": "Bytová družstva", "text": "Revize elektroinstalací bytových domů" },
-      { "name": "Čerpací stanice", "text": "Revize v prostředí s nebezpečím výbuchu" },
-      { "name": "Školy a školky", "text": "Revize elektro a pravidelný servis" },
-      { "name": "Kancelářské objekty", "text": "Revize spotřebičů a elektroinstalací" }
+      {
+        "name": "Jafadent s.r.o.",
+        "text": "Stomatologické ordinace – kompletní elektro dodávka"
+      },
+      {
+        "name": "Výrobní provozy",
+        "text": "Pravidelné revize a servis elektro"
+      },
+      {
+        "name": "Bytová družstva",
+        "text": "Revize elektroinstalací bytových domů"
+      },
+      {
+        "name": "Čerpací stanice",
+        "text": "Revize v prostředí s nebezpečím výbuchu"
+      },
+      {
+        "name": "Školy a školky",
+        "text": "Revize elektro a pravidelný servis"
+      },
+      {
+        "name": "Kancelářské objekty",
+        "text": "Revize spotřebičů a elektroinstalací"
+      }
     ]
   },
   "contact": {
@@ -227,10 +284,22 @@
     "tagline": "Revize, montáže a servis elektro v Liberci a okolí.",
     "copyright": "© 2026 Elrevmont. Všechna práva vyhrazena.",
     "links": [
-      { "label": "Úvod", "href": "#hero" },
-      { "label": "Revize", "href": "#revize" },
-      { "label": "Montáže", "href": "#montaze" },
-      { "label": "Kontakt", "href": "#kontakt" }
+      {
+        "label": "Úvod",
+        "href": "#hero"
+      },
+      {
+        "label": "Revize",
+        "href": "#revize"
+      },
+      {
+        "label": "Montáže",
+        "href": "#montaze"
+      },
+      {
+        "label": "Kontakt",
+        "href": "#kontakt"
+      }
     ]
   }
 }
