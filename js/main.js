@@ -58,6 +58,31 @@ function renderNav(data) {
     links.appendChild(el('a', { href: l.href }, [document.createTextNode(l.label)]));
   });
   document.getElementById('nav-cta').textContent = data.nav.ctaLabel;
+
+  setupNavCursor(links);
+}
+
+// Pilulkové menu s posuvným "kurzorem", který na hover plynule klouže
+// mezi položkami (vanilla JS ekvivalent NavHeader komponenty).
+function setupNavCursor(navEl) {
+  const cursor = el('span', { class: 'nav-cursor', 'aria-hidden': 'true' });
+  navEl.appendChild(cursor);
+
+  const linkEls = Array.from(navEl.querySelectorAll('a'));
+
+  function moveCursorTo(target) {
+    cursor.style.width = `${target.offsetWidth}px`;
+    cursor.style.left = `${target.offsetLeft}px`;
+    cursor.style.opacity = '1';
+  }
+
+  linkEls.forEach(link => {
+    link.addEventListener('mouseenter', () => moveCursorTo(link));
+  });
+
+  navEl.addEventListener('mouseleave', () => {
+    cursor.style.opacity = '0';
+  });
 }
 
 function renderHero(data) {
