@@ -15,14 +15,15 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 // Vygeneruje jednu vrstvu křivek (ekvivalent FloatingPaths({ position })).
 // `position` mění směr/rozestup křivek, takže dvě vrstvy s +1 a -1
 // vytvoří jemný křížený vzor, podobně jako v originální komponentě.
-// Souřadnice jsou zrcadlené (x → -x, y → -y vůči středu viewBoxu),
-// takže se vzor soustředí do pravého horního rohu místo levého
-// dolního — řešeno přímo v datech cesty, ne CSS transformací
-// na kontejneru (ta by komplikovala GPU compositing animace níže).
+// `mirrored` řídí, jestli se souřadnice zrcadlí kolem středu viewBoxu
+// (mx = 696 - x, my = 316 - y) — false dá vzor do levého dolního rohu
+// (originální pozice), true ho přesune do pravého horního rohu.
+// Zrcadlení je řešené přímo v datech cesty, ne CSS transformací na
+// kontejneru (ta by komplikovala GPU compositing animace níže).
 // Animace "plynutí" je řešená na úrovni celého <svg> (viz CSS
-// .layer-a / .layer-b) přes transform, ne na jednotlivých cestách —
-// je to o řád levnější pro výkon prohlížeče.
-function buildPathsLayer(position, layerClass, count = 14) {
+// .layer-a / .layer-b / .layer-c / .layer-d) přes transform, ne na
+// jednotlivých cestách — je to o řád levnější pro výkon prohlížeče.
+function buildPathsLayer(position, layerClass, mirrored, count = 14) {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', '0 0 696 316');
   svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
@@ -46,13 +47,15 @@ function buildPathsLayer(position, layerClass, count = 14) {
     const endY = 875 - i * 6;
 
     // Zrcadlení kolem středu viewBoxu (348, 158): mx = 696 - x, my = 316 - y.
-    // Tím se vzor, který byl soustředěný vlevo dole, přesune vpravo nahoru.
+    const identity = (x, y) => [x, y];
     const mirror = (x, y) => [696 - x, 316 - y];
-    const [mStartX, mStartY] = mirror(startX, startY);
-    const [mC1x, mC1y] = mirror(c1x, c1y);
-    const [mMidX, mMidY] = mirror(midX, midY);
-    const [mC2x, mC2y] = mirror(c2x, c2y);
-    const [mEndX, mEndY] = mirror(endX, endY);
+    const transform = mirrored ? mirror : identity;
+
+    const [mStartX, mStartY] = transform(startX, startY);
+    const [mC1x, mC1y] = transform(c1x, c1y);
+    const [mMidX, mMidY] = transform(midX, midY);
+    const [mC2x, mC2y] = transform(c2x, c2y);
+    const [mEndX, mEndY] = transform(endX, endY);
 
     const d =
       `M${mStartX} ${mStartY}` +
@@ -74,8 +77,13 @@ function initHeroPaths() {
   if (!container) return;
 
   container.innerHTML = '';
-  container.appendChild(buildPathsLayer(1, 'layer-a'));
-  container.appendChild(buildPathsLayer(-1, 'layer-b'));
+  // Dvě vrstvy vpravo nahoře (zrcadlené) + dvě vrstvy vlevo dole
+  // (originální pozice) — čtyři vrstvy celkem, hustší a viditelnější
+  // "plavající" vzor v obou rozích současně.
+  container.appendChild(buildPathsLayer(1, 'layer-a', true));
+  container.appendChild(buildPathsLayer(-1, 'layer-b', true));
+  container.appendChild(buildPathsLayer(1, 'layer-c', false));
+  container.appendChild(buildPathsLayer(-1, 'layer-d', false));
 }
 
 // Rozdělí text nadpisu na slova a písmena, každé písmeno zabalí do <span>

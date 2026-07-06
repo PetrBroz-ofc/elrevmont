@@ -436,6 +436,18 @@ function setupScrollReveal() {
     renderFooter(data);
     setupNavToggle();
     setupScrollReveal();
+
+    // BorderGlow efekt na kartách služeb a školení (vanilla JS,
+    // viz js/border-glow.js) — musí běžet až po vykreslení karet.
+    if (typeof initBorderGlow === 'function') {
+      initBorderGlow('.service-card', { edgeSensitivity: 35 });
+      initBorderGlow('.skoleni-card', { edgeSensitivity: 35 });
+    }
+
+    // ClickSpark efekt pro celý web (vanilla JS, viz js/click-spark.js).
+    if (typeof initClickSpark === 'function') {
+      initClickSpark({ sparkColor: '#2E9BF0', sparkCount: 8, sparkRadius: 20, duration: 420 });
+    }
   } catch (err) {
     console.error('Chyba při načítání obsahu webu:', err);
     document.body.innerHTML = '<div style="padding:80px;text-align:center;font-family:sans-serif">Nepodařilo se načíst obsah stránky. Zkuste to prosím později.</div>';

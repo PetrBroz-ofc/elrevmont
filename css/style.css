@@ -235,32 +235,47 @@ section { position: relative; }
   inset: -10% -5%;
   width: 110%;
   height: 120%;
-  opacity: 0.4;
+  opacity: 0.42;
   will-change: transform;
 }
-.hero-paths svg.layer-a { animation: hero-path-drift-a 34s ease-in-out infinite; }
-.hero-paths svg.layer-b { animation: hero-path-drift-b 40s ease-in-out infinite; }
+.hero-paths svg.layer-a { animation: hero-path-drift-a 30s ease-in-out infinite; }
+.hero-paths svg.layer-b { animation: hero-path-drift-b 36s ease-in-out infinite; }
+.hero-paths svg.layer-c { animation: hero-path-drift-c 42s ease-in-out infinite; opacity: 0.3; }
+.hero-paths svg.layer-d { animation: hero-path-drift-d 48s ease-in-out infinite; opacity: 0.3; }
 .hero-paths path {
   fill: none;
   stroke: var(--c-accent);
 }
-/* Celá vrstva SVG se jemně posouvá a mírně přibližuje/oddaluje —
-   vizuálně podobné "plynutí" čar jako stroke-dashoffset animace,
-   ale technicky jen levný transform (GPU compositing, žádný
-   přepočet geometrie cesty na každý snímek). */
+/* Celá vrstva SVG se jemně posouvá — vizuálně podobné "plynutí"/
+   "plavání" čar jako stroke-dashoffset animace, ale technicky jen
+   levný transform (GPU compositing, žádný přepočet geometrie cesty
+   na každý snímek). Každá vrstva má jinou amplitudu, směr a délku
+   trvání, ať vzor nepůsobí mechanicky synchronizovaně. */
 @keyframes hero-path-drift-a {
   0%   { transform: translate(0, 0); }
-  50%  { transform: translate(1.5%, -2%); }
+  50%  { transform: translate(3%, -4%); }
   100% { transform: translate(0, 0); }
 }
 @keyframes hero-path-drift-b {
   0%   { transform: translate(0, 0); }
-  50%  { transform: translate(-2%, 1.5%); }
+  50%  { transform: translate(-4%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes hero-path-drift-c {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(-3%, -3.5%); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes hero-path-drift-d {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(3.5%, 3%); }
   100% { transform: translate(0, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-paths svg.layer-a,
-  .hero-paths svg.layer-b {
+  .hero-paths svg.layer-b,
+  .hero-paths svg.layer-c,
+  .hero-paths svg.layer-d {
     animation: none;
   }
 }
@@ -413,6 +428,50 @@ section { position: relative; }
 .service-card p {
   font-size: 14.5px;
   color: rgba(245,247,250,0.62);
+}
+
+/* ---------- BorderGlow efekt (karty služeb, školení) ---------- */
+/* Vanilla JS/CSS ekvivalent komponenty "BorderGlow": jemný barevný
+   okraj a vnitřní záře karty, které se natočí a zesílí podle pozice
+   kurzoru. Řízeno JS (js/border-glow.js) přes --edge-proximity
+   a --cursor-angle custom properties. Efekt je navržený tak, aby
+   se vešel dovnitř karty bez přesahu (grid rodičů má overflow:hidden). */
+.border-glow-card {
+  --edge-proximity: 0;
+  --cursor-angle: 45deg;
+  --edge-sensitivity: 35;
+  --color-sensitivity: calc(var(--edge-sensitivity) + 20);
+
+  position: relative;
+  isolation: isolate;
+}
+.border-glow-card > .edge-light {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+  opacity: calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity)));
+  transition: opacity 0.3s ease-out;
+  mask-image: conic-gradient(
+    from var(--cursor-angle) at center,
+    black 2.5%, transparent 18%, transparent 82%, black 97.5%
+  );
+}
+.border-glow-card > .edge-light::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(46, 155, 240, 0.9),
+    inset 0 0 6px 0 rgba(46, 155, 240, 0.55),
+    inset 0 0 18px 0 rgba(56, 189, 248, 0.35),
+    inset 0 0 32px 2px rgba(46, 155, 240, 0.18);
+}
+.border-glow-card:not(:hover) > .edge-light {
+  transition: opacity 0.6s ease-in-out;
 }
 
 /* ---------- 4. Revize ---------- */
