@@ -249,14 +249,14 @@ section { position: relative; }
    ale technicky jen levný transform (GPU compositing, žádný
    přepočet geometrie cesty na každý snímek). */
 @keyframes hero-path-drift-a {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(1.5%, -2%) scale(1.03); }
-  100% { transform: translate(0, 0) scale(1); }
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(1.5%, -2%); }
+  100% { transform: translate(0, 0); }
 }
 @keyframes hero-path-drift-b {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(-2%, 1.5%) scale(1.03); }
-  100% { transform: translate(0, 0) scale(1); }
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(-2%, 1.5%); }
+  100% { transform: translate(0, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-paths svg.layer-a,
