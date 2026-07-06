@@ -91,10 +91,6 @@ function renderHero(data) {
   document.getElementById('hero-title').textContent = h.title;
   document.getElementById('hero-subtitle').textContent = h.subtitle;
 
-  if (h.backgroundImage) {
-    document.getElementById('hero-bg').style.backgroundImage = `url('${h.backgroundImage}')`;
-  }
-
   const phoneBtn = document.getElementById('hero-btn-phone');
   phoneBtn.innerHTML = getIcon('phone') + `<span>${h.phone}</span>`;
   phoneBtn.setAttribute('href', `tel:${h.phone.replace(/\s/g, '')}`);
@@ -106,6 +102,11 @@ function renderHero(data) {
   const cue = document.getElementById('hero-scroll-cue');
   cue.innerHTML = getIcon('arrow-down');
   cue.setAttribute('title', h.scrollCueText || '');
+
+  // Scroll-driven video efekt (vanilla JS, viz js/hero-scroll.js)
+  if (typeof initHeroScroll === 'function') {
+    initHeroScroll(h);
+  }
 }
 
 function renderAboutFirm(data) {
