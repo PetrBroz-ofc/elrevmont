@@ -6,7 +6,8 @@
    stránky rozepíše písmeno po písmenu.
 
    Žádná závislost na Reactu, Next.js ani Framer Motion —
-   čisté SVG + CSS animace (stroke-dashoffset, transform).
+   čisté SVG + CSS animace (transform na úrovni celé vrstvy,
+   optimalizované pro plynulost místo animace jednotlivých cest).
    ========================================================= */
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -14,11 +15,15 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 // Vygeneruje jednu vrstvu křivek (ekvivalent FloatingPaths({ position })).
 // `position` mění směr/rozestup křivek, takže dvě vrstvy s +1 a -1
 // vytvoří jemný křížený vzor, podobně jako v originální komponentě.
-function buildPathsLayer(position, count = 24) {
+// Animace "plynutí" je řešená na úrovni celého <svg> (viz CSS
+// .layer-a / .layer-b) přes transform, ne na jednotlivých cestách —
+// je to o řád levnější pro výkon prohlížeče.
+function buildPathsLayer(position, layerClass, count = 14) {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', '0 0 696 316');
   svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
   svg.setAttribute('fill', 'none');
+  svg.setAttribute('class', layerClass);
 
   for (let i = 0; i < count; i++) {
     const path = document.createElementNS(SVG_NS, 'path');
@@ -33,15 +38,7 @@ function buildPathsLayer(position, count = 24) {
 
     path.setAttribute('d', d);
     path.setAttribute('stroke-width', String(0.5 + i * 0.03));
-    path.setAttribute('stroke-opacity', String(0.1 + i * 0.03));
-    path.setAttribute('stroke-dasharray', '1400');
-
-    // Mírně odlišná délka a zpoždění animace pro každou křivku,
-    // ať vlnění nepůsobí mechanicky synchronizovaně.
-    const duration = 20 + ((i * 37) % 10); // deterministické "náhodné" rozpětí 20–30s
-    const delay = (i % 6) * -1.7;
-    path.style.animationDuration = `${duration}s`;
-    path.style.animationDelay = `${delay}s`;
+    path.setAttribute('stroke-opacity', String(0.15 + i * 0.04));
 
     svg.appendChild(path);
   }
@@ -54,8 +51,8 @@ function initHeroPaths() {
   if (!container) return;
 
   container.innerHTML = '';
-  container.appendChild(buildPathsLayer(1));
-  container.appendChild(buildPathsLayer(-1));
+  container.appendChild(buildPathsLayer(1, 'layer-a'));
+  container.appendChild(buildPathsLayer(-1, 'layer-b'));
 }
 
 // Rozdělí text nadpisu na slova a písmena, každé písmeno zabalí do <span>
@@ -75,7 +72,7 @@ function animateHeroTitle() {
   let globalIndex = 0;
   lines.forEach((line, lineIndex) => {
     const words = line.split(' ').filter(Boolean);
-    words.forEach(word => {
+    words.forEach((word, wordIndex) => {
       const wordSpan = document.createElement('span');
       wordSpan.className = 'word';
       wordSpan.setAttribute('aria-hidden', 'true');
@@ -89,6 +86,12 @@ function animateHeroTitle() {
         globalIndex++;
       });
 
+      // Skutečná mezera mezi slovy jako textový uzel (spolehlivější
+      // než CSS ::before, které se v kombinaci s letter-spacing
+      // a inline-block slovy nemusí vykreslit s dostatečnou šířkou).
+      if (wordIndex > 0) {
+        titleEl.appendChild(document.createTextNode('\u00a0'));
+      }
       titleEl.appendChild(wordSpan);
     });
     if (lineIndex < lines.length - 1) {
