@@ -18,7 +18,7 @@ admin.html           administrace (samostatná stránka, mimo index)
 css/style.css         styly veřejného webu
 css/admin.css         styly administrace
 js/main.js            renderer veřejného webu (čte data/content.json)
-js/hero-scroll.js      scroll-driven video efekt v hero sekci (vanilla JS, bez frameworku)
+js/hero-paths.js       animované vlnité čáry na pozadí hero sekce + animace nadpisu (vanilla JS, bez frameworku)
 js/admin.js            logika administrace (login, formuláře, ukládání, upload fotek)
 js/icons.js            sada SVG ikon
 data/content.json      veškerý textový/obsahový obsah webu
@@ -37,7 +37,7 @@ Galerie, Reference, FAQ, Kontakt**.
 Na stránce jsou navíc sekce **Hero** (úvod) a **Služby** (6 karet), které
 nemají vlastní položku v menu, ale zobrazují se mezi Hero a Revize.
 
-1. **Hero** — scroll-driven video (viz níže), jméno firmy, hlavní nadpis, tlačítka telefon/e-mail
+1. **Hero** — animované vlnité čáry na pozadí (viz níže), jméno firmy, hlavní nadpis, tlačítka telefon/e-mail
 2. **O nás** — stručný popis činnosti + 3 statistiky
 3. **Služby** — 6 karet nabízených služeb (bez vlastní položky v menu)
 4. **Revize** — základní informace, druhy revizí, proč se dělají, objekty, legislativa
@@ -49,31 +49,27 @@ nemají vlastní položku v menu, ale zobrazují se mezi Hero a Revize.
 10. **FAQ** — časté dotazy, rozklikávací seznam
 11. **Kontakt** — kontaktní údaje + Google mapa s provozovnou
 
-## Hero sekce — scroll-driven video
+## Hero sekce — animované vlnité čáry na pozadí
 
-Úvodní sekce používá efekt inspirovaný konceptem "ContainerScroll" (scroll-
--driven video), ale přepsaný do čistého vanilla JS (`js/hero-scroll.js`) bez
-Reactu, Next.js nebo knihovny Motion/Framer Motion — aby zůstala zachována
-architektura statického webu.
+Úvodní sekce používá efekt inspirovaný konceptem "BackgroundPaths", ale
+přepsaný do čistého vanilla JS/SVG (`js/hero-paths.js`) bez Reactu, Next.js
+nebo knihovny Framer Motion — aby zůstala zachována architektura statického
+webu.
 
-Chování: video v malém zaobleném okně se při scrollování přes dlouhou dráhu
-(320 % výšky obrazovky) postupně "odmaskuje" (CSS `clip-path`) na plnou šířku
-a výšku sticky panelu. Nadpis, podnadpis a tlačítka nad videem se zároveň
-zvedají nahoru s jemným efektem rozostření a prolnutí. Jakmile scroll dorazí
-na konec dráhy, sticky panel se "pustí" a pokračuje běžný scroll na další
-sekce webu.
+Chování: na pozadí se vykreslí dvě vrstvy jemně animovaných SVG křivek
+(připomínajících vodivé dráhy), které se pomalu a nekonečně vlní pomocí
+CSS animace `stroke-dashoffset`. Hlavní nadpis se při načtení stránky
+rozepíše písmeno po písmenu (každé písmeno má vlastní zpožděnou animaci).
+Zbytek obsahu (eyebrow, podnadpis, tlačítka telefon/e-mail) zůstal beze
+změny stejný jako předtím. Sekce je statická — scrolluje se přes ni úplně
+normálně, bez scroll-jackingu.
 
 Efekt respektuje `prefers-reduced-motion`: lidem, kteří mají v systému
-vypnuté animace, se zobrazí rovnou plně rozbalený stav bez scrollové animace.
+vypnuté animace, se čáry na pozadí nehýbou a nadpis se zobrazí rovnou celý.
 
-Video je aktuálně nastaveno na volně dostupný stock klip z Pexels (detail
-barevných vodičů na pracovním stole, licence Pexels — volné komerční
-i nekomerční užití bez nutnosti atribuce):
-```
-https://videos.pexels.com/video-files/6079428/6079428-uhd_2560_1440_24fps.mp4
-```
-Odkaz na video lze kdykoliv změnit v adminu (záložka Hero → „Odkaz na video“)
-nebo přímo v `data/content.json` (`hero.backgroundVideo`).
+Přístupnost: nadpis má nastavený `aria-label` s plným textem, takže čtečky
+obrazovky přečtou smysluplný text i přes to, že vizuálně je rozdělený na
+jednotlivá písmenka v `<span>` elementech.
 
 ## Galerie — kategorie a nahrávání fotek
 

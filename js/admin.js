@@ -209,7 +209,7 @@ const TABS = {
 
 function renderHeroTab(root) {
   const h = CONTENT.hero;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Úvodní sekce s videem, které se při scrollování odmaskuje z malého okna na celou velikost, hlavním nadpisem a kontakty (telefon, e-mail).')]));
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Úvodní sekce s animovanými vlnitými čarami na pozadí, hlavním nadpisem (rozepíše se písmeno po písmenu) a kontakty (telefon, e-mail).')]));
 
   const panel = el('div', { class: 'card-panel' });
   panel.appendChild(field('Malý text nad nadpisem', textInput(h.eyebrowTag, v => h.eyebrowTag = v), 'Např. jméno a obor firmy.'));
@@ -224,16 +224,10 @@ function renderHeroTab(root) {
   panel.appendChild(field('Text nápovědy ke scrollování', textInput(h.scrollCueText, v => h.scrollCueText = v)));
   root.appendChild(panel);
 
-  const mediaPanel = el('div', { class: 'card-panel' }, [
-    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Video v hero sekci')])])
-  ]);
-  mediaPanel.appendChild(field('Odkaz na video (.mp4)', textInput(h.backgroundVideo || '', v => h.backgroundVideo = v), 'Přímý odkaz na video soubor, které se při scrollu odmaskovává na celou obrazovku.'));
-  root.appendChild(mediaPanel);
-
   const bgPanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Záložní obrázek (nepovinné)')])])
   ]);
-  const bgField = field('Cesta k obrázku na pozadí', textInput(h.backgroundImage, v => { h.backgroundImage = v; }), 'Např. assets/img/hero-bg.jpg — aktuálně se nepoužívá, video má přednost.');
+  const bgField = field('Cesta k obrázku na pozadí', textInput(h.backgroundImage, v => { h.backgroundImage = v; }), 'Např. assets/img/hero-bg.jpg — momentálně se nezobrazuje, hero používá gradient a animované čáry.');
   bgPanel.appendChild(bgField);
   bgPanel.appendChild(imageUploadButton((path) => {
     h.backgroundImage = path;

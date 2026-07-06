@@ -103,9 +103,13 @@ function renderHero(data) {
   cue.innerHTML = getIcon('arrow-down');
   cue.setAttribute('title', h.scrollCueText || '');
 
-  // Scroll-driven video efekt (vanilla JS, viz js/hero-scroll.js)
-  if (typeof initHeroScroll === 'function') {
-    initHeroScroll(h);
+  // Animované vlnité čáry na pozadí + animace nadpisu písmeno po písmenu
+  // (vanilla JS, viz js/hero-paths.js)
+  if (typeof initHeroPaths === 'function') {
+    initHeroPaths();
+  }
+  if (typeof animateHeroTitle === 'function') {
+    animateHeroTitle();
   }
 }
 

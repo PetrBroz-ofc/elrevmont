@@ -32,37 +32,19 @@
   </div>
 </header>
 
-<!-- 1. HERO — scroll-driven video -->
-<section class="hero-scroll" id="hero">
-  <div class="hero-scroll-track" id="hero-scroll-track">
-    <div class="hero-scroll-sticky">
-
-      <div class="hero-scroll-content" id="hero-scroll-content">
-        <span class="hero-eyebrow-tag" id="hero-eyebrow"></span>
-        <h1 class="hero-title" id="hero-title"></h1>
-        <p class="hero-subtitle" id="hero-subtitle"></p>
-      </div>
-
-      <div class="hero-video-mask" id="hero-video-mask">
-        <video
-          id="hero-video"
-          class="hero-video"
-          muted
-          loop
-          playsinline
-          autoplay
-          preload="auto"
-        ></video>
-      </div>
-
-      <div class="hero-actions hero-scroll-actions" id="hero-scroll-actions">
-        <a href="tel:" class="btn btn-primary" id="hero-btn-phone"></a>
-        <a href="mailto:" class="btn hero-btn-secondary" id="hero-btn-email"></a>
-      </div>
-
-      <div class="hero-scroll-cue" id="hero-scroll-cue"></div>
+<!-- 1. HERO — animované vlnité čáry na pozadí -->
+<section class="hero" id="hero">
+  <div class="hero-paths" id="hero-paths" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <span class="hero-eyebrow-tag" id="hero-eyebrow"></span>
+    <h1 class="hero-title" id="hero-title"></h1>
+    <p class="hero-subtitle" id="hero-subtitle"></p>
+    <div class="hero-actions">
+      <a href="tel:" class="btn btn-primary" id="hero-btn-phone"></a>
+      <a href="mailto:" class="btn hero-btn-secondary" id="hero-btn-email"></a>
     </div>
   </div>
+  <div class="hero-scroll-cue" id="hero-scroll-cue"></div>
 </section>
 
 <!-- 2. O FIRMĚ -->
@@ -251,7 +233,7 @@
 </footer>
 
 <script src="js/icons.js"></script>
-<script src="js/hero-scroll.js"></script>
+<script src="js/hero-paths.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
