@@ -14,34 +14,15 @@
   "nav": {
     "logo": "ELREVMONT",
     "links": [
-      {
-        "label": "Úvod",
-        "href": "#hero"
-      },
-      {
-        "label": "Revize",
-        "href": "#revize"
-      },
-      {
-        "label": "Montáže",
-        "href": "#montaze"
-      },
-      {
-        "label": "Galerie",
-        "href": "#galerie"
-      },
-      {
-        "label": "Školení",
-        "href": "#skoleni"
-      },
-      {
-        "label": "Servis",
-        "href": "#sluzby"
-      },
-      {
-        "label": "Kontakt",
-        "href": "#kontakt"
-      }
+      { "label": "O nás", "href": "#o-firme" },
+      { "label": "Revize", "href": "#revize" },
+      { "label": "Montáže", "href": "#montaze" },
+      { "label": "Školení", "href": "#skoleni" },
+      { "label": "Servis", "href": "#servis" },
+      { "label": "Galerie", "href": "#galerie" },
+      { "label": "Reference", "href": "#reference" },
+      { "label": "FAQ", "href": "#faq" },
+      { "label": "Kontakt", "href": "#kontakt" }
     ],
     "ctaLabel": "Kontakt"
   },
@@ -59,18 +40,9 @@
     "title": "Provádíme revize elektro a hromosvodů",
     "text": "Provádíme revize elektroinstalací, elektrických zařízení, elektrických spotřebičů, ochrany před bleskem (hromosvodů). Dále provádíme elektromontážní práce, montáže ochrany před bleskem (hromosvodů), servis a údržbu zařízení (do 35 kV a elektrická zařízení v prostředí s nebezpečím výbuchu). Dále provádíme školení vyhlášky č. 50/1978 Sb. a individuální školení a konzultace v oblasti elektro.",
     "badges": [
-      {
-        "value": "20+",
-        "label": "Spokojených firem"
-      },
-      {
-        "value": "35 kV",
-        "label": "rozsah oprávnění"
-      },
-      {
-        "value": "100%",
-        "label": "dle norem ČSN"
-      }
+      { "value": "20+", "label": "let praxe v oboru" },
+      { "value": "35 kV", "label": "rozsah oprávnění" },
+      { "value": "100%", "label": "dle norem ČSN" }
     ]
   },
   "services": {
@@ -195,6 +167,16 @@
       }
     ]
   },
+  "servis": {
+    "eyebrow": "Servis",
+    "title": "Servis a údržba elektro",
+    "text": "Provádíme kompletní servis v oblasti elektro, tj. odstraňování provozních závad a údržbu zařízení včetně provádění pravidelných kontrol a revizí. Tyto služby jsou prováděné v rámci uzavřené servisní smlouvy.",
+    "points": [
+      { "title": "Odstraňování závad", "description": "Rychlé řešení provozních poruch a havárií elektrických zařízení." },
+      { "title": "Pravidelná údržba", "description": "Preventivní kontroly a údržba zařízení, aby se předešlo výpadkům a poruchám." },
+      { "title": "Servisní smlouva", "description": "Vše probíhá v rámci uzavřené servisní smlouvy s pravidelnými kontrolami a revizemi." }
+    ]
+  },
   "gallery": {
     "eyebrow": "Z naší práce",
     "title": "Galerie",
@@ -206,10 +188,7 @@
         "cover": "assets/img/gallery-1.jpg",
         "description": "Revize a montáže elektroinstalací v rodinných domech.",
         "images": [
-          {
-            "src": "assets/img/gallery-1.jpg",
-            "alt": "Rodinný dům – elektroinstalace"
-          }
+          { "src": "assets/img/gallery-1.jpg", "alt": "Rodinný dům – elektroinstalace" }
         ]
       },
       {
@@ -218,10 +197,7 @@
         "cover": "assets/img/gallery-2.jpg",
         "description": "Revize a servis elektro v průmyslových provozech.",
         "images": [
-          {
-            "src": "assets/img/gallery-2.jpg",
-            "alt": "Průmyslový objekt – elektro"
-          }
+          { "src": "assets/img/gallery-2.jpg", "alt": "Průmyslový objekt – elektro" }
         ]
       },
       {
@@ -230,10 +206,7 @@
         "cover": "assets/img/gallery-3.jpg",
         "description": "Montáže a revize ochrany před bleskem.",
         "images": [
-          {
-            "src": "assets/img/gallery-3.jpg",
-            "alt": "Revize hromosvodu"
-          }
+          { "src": "assets/img/gallery-3.jpg", "alt": "Revize hromosvodu" }
         ]
       }
     ]
@@ -241,30 +214,49 @@
   "reference": {
     "eyebrow": "Reference",
     "title": "Firmy a objekty, se kterými spolupracujeme",
+    "subtitle": "Loga firem a partnerů doplníme postupně v administraci.",
+    "items": [
+      { "name": "Jafadent s.r.o.", "logo": "" },
+      { "name": "Výrobní provozy", "logo": "" },
+      { "name": "Bytová družstva", "logo": "" },
+      { "name": "Čerpací stanice", "logo": "" },
+      { "name": "Školy a školky", "logo": "" },
+      { "name": "Kancelářské objekty", "logo": "" },
+      { "name": "", "logo": "" },
+      { "name": "", "logo": "" }
+    ]
+  },
+  "faq": {
+    "eyebrow": "Časté dotazy",
+    "title": "Co byste měli vědět",
     "items": [
       {
-        "name": "Jafadent s.r.o.",
-        "text": "Stomatologické ordinace – kompletní elektro dodávka"
+        "question": "Jak často je potřeba dělat pravidelnou revizi elektroinstalace?",
+        "answer": "Lhůty se určují podle druhu instalace, způsobu provozu, četnosti údržby a vnějších vlivů, kterým je instalace vystavena. Konkrétní lhůtu vám rádi stanovíme na základě prohlídky objektu."
       },
       {
-        "name": "Výrobní provozy",
-        "text": "Pravidelné revize a servis elektro"
+        "question": "Musím mít revizi i na běžné spotřebiče v kanceláři?",
+        "answer": "Ano, revize se týká i elektrických spotřebičů a ručního nářadí – například počítačů, tiskáren, varných konvic nebo prodlužovacích přívodů, pokud jsou používány v pracovním prostředí."
       },
       {
-        "name": "Bytová družstva",
-        "text": "Revize elektroinstalací bytových domů"
+        "question": "Provádíte revize i v prostředí s nebezpečím výbuchu?",
+        "answer": "Ano, provádíme revize a servis elektrických zařízení v prostředí s nebezpečím výbuchu i zařízení do 35 kV, včetně čerpacích stanic pohonných hmot."
       },
       {
-        "name": "Čerpací stanice",
-        "text": "Revize v prostředí s nebezpečím výbuchu"
+        "question": "Co je výstupem revize?",
+        "answer": "Výstupem je revizní zpráva dokládající stav zařízení z hlediska bezpečnosti dle příslušných norem a případný soupis zjištěných závad s doporučením k jejich odstranění."
       },
       {
-        "name": "Školy a školky",
-        "text": "Revize elektro a pravidelný servis"
+        "question": "Jak dlouho trvá vyřízení revizní zprávy?",
+        "answer": "Záleží na rozsahu revidovaného zařízení. U menších instalací obvykle zprávu předáváme do několika pracovních dnů od provedení revize."
       },
       {
-        "name": "Kancelářské objekty",
-        "text": "Revize spotřebičů a elektroinstalací"
+        "question": "Co obsahuje servisní smlouva?",
+        "answer": "Servisní smlouva zahrnuje pravidelné kontroly, revize a údržbu vašich elektrických zařízení, a také přednostní řešení případných provozních závad."
+      },
+      {
+        "question": "Nabízíte i školení pro zaměstnance?",
+        "answer": "Ano, provádíme školení dle vyhlášky č. 50/1978 Sb. a individuální školení a konzultace v oblasti elektro přímo na míru vaší firmě."
       }
     ]
   },
@@ -284,22 +276,10 @@
     "tagline": "Revize, montáže a servis elektro v Liberci a okolí.",
     "copyright": "© 2026 Elrevmont. Všechna práva vyhrazena.",
     "links": [
-      {
-        "label": "Úvod",
-        "href": "#hero"
-      },
-      {
-        "label": "Revize",
-        "href": "#revize"
-      },
-      {
-        "label": "Montáže",
-        "href": "#montaze"
-      },
-      {
-        "label": "Kontakt",
-        "href": "#kontakt"
-      }
+      { "label": "Úvod", "href": "#hero" },
+      { "label": "Revize", "href": "#revize" },
+      { "label": "Montáže", "href": "#montaze" },
+      { "label": "Kontakt", "href": "#kontakt" }
     ]
   }
 }

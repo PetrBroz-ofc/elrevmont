@@ -213,6 +213,22 @@ function renderSkoleni(data) {
   });
 }
 
+function renderServis(data) {
+  const s = data.servis;
+  document.getElementById('servis-eyebrow').textContent = s.eyebrow;
+  document.getElementById('servis-title').textContent = s.title;
+  document.getElementById('servis-text').textContent = s.text;
+
+  const points = document.getElementById('servis-points');
+  points.innerHTML = '';
+  (s.points || []).forEach(p => {
+    points.appendChild(el('div', { class: 'servis-point', 'data-reveal': '' }, [
+      el('h3', {}, [document.createTextNode(p.title)]),
+      el('p', {}, [document.createTextNode(p.description)])
+    ]));
+  });
+}
+
 function renderGallery(data) {
   const g = data.gallery;
   document.getElementById('gallery-eyebrow').textContent = g.eyebrow;
@@ -267,28 +283,56 @@ function renderReference(data) {
   const r = data.reference;
   document.getElementById('reference-eyebrow').textContent = r.eyebrow;
   document.getElementById('reference-title').textContent = r.title;
+  const subtitleEl = document.getElementById('reference-subtitle');
+  if (subtitleEl) subtitleEl.textContent = r.subtitle || '';
 
-  const row1 = document.getElementById('marquee-row-1');
-  const row2 = document.getElementById('marquee-row-2');
-  row1.innerHTML = '';
-  row2.innerHTML = '';
+  const grid = document.getElementById('reference-grid');
+  grid.innerHTML = '';
 
-  if (!r.items || r.items.length === 0) return;
+  (r.items || []).forEach(item => {
+    if (item.logo) {
+      // Logo je nahrané — zobrazíme ho v dlaždici.
+      grid.appendChild(el('div', { class: 'reference-tile has-logo', 'data-reveal': '' }, [
+        el('img', { src: item.logo, alt: item.name || 'Logo partnera', loading: 'lazy' })
+      ]));
+    } else {
+      // Logo zatím chybí — prázdná dlaždice jako placeholder pro budoucí nahrání v adminu.
+      const children = [el('div', { html: getIcon('plus') })];
+      if (item.name) children.push(el('div', { class: 'tile-label' }, [document.createTextNode(item.name)]));
+      grid.appendChild(el('div', { class: 'reference-tile is-empty', 'data-reveal': '' }, children));
+    }
+  });
+}
 
-  // Rozdělíme reference do dvou řad a duplikujeme obsah pro plynulou nekonečnou smyčku.
-  const half = Math.ceil(r.items.length / 2);
-  const firstRow = r.items.slice(0, half);
-  const secondRow = r.items.length > half ? r.items.slice(half) : r.items;
+function renderFAQ(data) {
+  const f = data.faq;
+  document.getElementById('faq-eyebrow').textContent = f.eyebrow;
+  document.getElementById('faq-title').textContent = f.title;
 
-  function buildCard(item) {
-    return el('div', { class: 'reference-card' }, [
-      el('div', { class: 'ref-name' }, [document.createTextNode(item.name)]),
-      el('div', { class: 'ref-text' }, [document.createTextNode(item.text)])
+  const list = document.getElementById('faq-list');
+  list.innerHTML = '';
+  f.items.forEach(item => {
+    const answer = el('div', { class: 'faq-answer' }, [
+      el('p', {}, [document.createTextNode(item.answer)])
     ]);
-  }
-
-  [firstRow, firstRow].forEach(set => set.forEach(item => row1.appendChild(buildCard(item))));
-  [secondRow, secondRow].forEach(set => set.forEach(item => row2.appendChild(buildCard(item))));
+    const question = el('button', { class: 'faq-question', type: 'button' }, [
+      el('span', {}, [document.createTextNode(item.question)]),
+      el('span', { class: 'icon' })
+    ]);
+    const wrap = el('div', { class: 'faq-item', 'data-reveal': '' }, [question, answer]);
+    question.addEventListener('click', () => {
+      const isOpen = wrap.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(x => {
+        x.classList.remove('open');
+        x.querySelector('.faq-answer').style.maxHeight = null;
+      });
+      if (!isOpen) {
+        wrap.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    });
+    list.appendChild(wrap);
+  });
 }
 
 function renderContact(data) {
@@ -379,8 +423,10 @@ function setupScrollReveal() {
     renderRevize(data);
     renderMontaze(data);
     renderSkoleni(data);
+    renderServis(data);
     renderGallery(data);
     renderReference(data);
+    renderFAQ(data);
     renderContact(data);
     renderFooter(data);
     setupNavToggle();

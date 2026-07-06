@@ -28,17 +28,25 @@ api/upload-image.js      serverless funkce — nahrání fotek do assets/img/gal
 assets/img/              obrázky (hero pozadí, galerie, o nás...)
 ```
 
-## Struktura webu (9 hlavních sekcí)
+## Struktura webu
+
+Hlavní menu (v tomto pořadí): **O nás, Revize, Montáže, Školení, Servis,
+Galerie, Reference, FAQ, Kontakt**.
+
+Na stránce jsou navíc sekce **Hero** (úvod) a **Služby** (6 karet), které
+nemají vlastní položku v menu, ale zobrazují se mezi Hero a Revize.
 
 1. **Hero** — fotka na pozadí, jméno firmy, hlavní nadpis, tlačítka telefon/e-mail
-2. **O firmě** — stručný popis činnosti + 3 statistiky
-3. **Služby** — 6 karet nabízených služeb
+2. **O nás** — stručný popis činnosti + 3 statistiky
+3. **Služby** — 6 karet nabízených služeb (bez vlastní položky v menu)
 4. **Revize** — základní informace, druhy revizí, proč se dělají, objekty, legislativa
 5. **Montáže** — popis + seznam typů objektů
 6. **Školení** — 3 karty (vyhláška, individuální školení, konzultace)
-7. **Galerie** — kategorie/alba fotografií, klik na kategorii otevře lightbox se všemi fotkami
-8. **Reference** — firmy/objekty ve dvou nekonečných pásech (marquee), plynou proti sobě
-9. **Kontakt** — kontaktní údaje + Google mapa s provozovnou
+7. **Servis** — text o servisu a údržbě + 3 body (odstraňování závad, pravidelná údržba, servisní smlouva)
+8. **Galerie** — kategorie/alba fotografií, klik na kategorii otevře lightbox se všemi fotkami
+9. **Reference** — mřížka dlaždic s logy firem/partnerů (viz níže)
+10. **FAQ** — časté dotazy, rozklikávací seznam
+11. **Kontakt** — kontaktní údaje + Google mapa s provozovnou
 
 ## Galerie — kategorie a nahrávání fotek
 
@@ -51,6 +59,16 @@ JPG, PNG, WEBP, GIF (max. cca 6 MB na soubor).
 
 Na webu se kategorie zobrazí jako dlaždice s náhledem; klik na dlaždici otevře
 lightbox se všemi fotkami dané kategorie.
+
+## Reference — dlaždice s logy
+
+Sekce Reference zobrazuje statickou mřížku dlaždic (bez animace). Dokud
+k dlaždici není nahrané logo, zobrazí se jen prázdná dlaždice s přerušovaným
+rámečkem, ikonou „+“ a volitelným popiskem (název firmy) — funguje jako
+vizuální „místo rezervováno pro logo“. Jakmile admin logo nahraje (stejným
+způsobem jako fotky do galerie, přes `/api/upload-image`), dlaždice se logem
+vyplní a rámeček zmizí. Počet dlaždic i jejich obsah se spravuje v adminu,
+záložka Reference.
 
 ## Kontaktní sekce — mapa místo formuláře
 

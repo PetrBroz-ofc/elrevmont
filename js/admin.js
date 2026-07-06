@@ -196,8 +196,10 @@ const TABS = {
   revize: { title: 'Revize', render: renderRevizeTab },
   montaze: { title: 'Montáže', render: renderMontazeTab },
   skoleni: { title: 'Školení', render: renderSkoleniTab },
+  servis: { title: 'Servis', render: renderServisTab },
   gallery: { title: 'Galerie', render: renderGalleryTab },
   reference: { title: 'Reference', render: renderReferenceTab },
+  faq: { title: 'FAQ', render: renderFaqTab },
   contact: { title: 'Kontakt', render: renderContactTab },
   footer: { title: 'Footer', render: renderFooterTab },
   nav: { title: 'Hlavní menu', render: renderNavTab },
@@ -488,6 +490,41 @@ function renderSkoleniTab(root) {
   redraw();
 }
 
+// ---------- Servis ----------
+
+function renderServisTab(root) {
+  const s = CONTENT.servis;
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Sekce servisu a údržby elektro.')]));
+
+  const panel = el('div', { class: 'card-panel' });
+  panel.appendChild(field('Eyebrow', textInput(s.eyebrow, v => s.eyebrow = v)));
+  panel.appendChild(field('Nadpis sekce', textInput(s.title, v => s.title = v)));
+  panel.appendChild(field('Text', textArea(s.text, v => s.text = v)));
+  root.appendChild(panel);
+
+  const pointsPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Body (karty vpravo)')])])
+  ]);
+  const container = el('div');
+  pointsPanel.appendChild(container);
+  root.appendChild(pointsPanel);
+
+  function redraw() {
+    renderRepeater({
+      container,
+      items: s.points,
+      itemLabel: 'Bod',
+      fieldsConfig: [
+        { render: (item) => field('Název', textInput(item.title, v => item.title = v)) },
+        { render: (item) => field('Popis', textArea(item.description, v => item.description = v)) }
+      ],
+      onAdd: () => { s.points.push({ title: '', description: '' }); redraw(); },
+      onRemove: (i) => { s.points.splice(i, 1); redraw(); }
+    });
+  }
+  redraw();
+}
+
 // ---------- Galerie s kategoriemi (alba) ----------
 
 function renderGalleryTab(root) {
@@ -606,15 +643,81 @@ function renderGalleryTab(root) {
 
 function renderReferenceTab(root) {
   const r = CONTENT.reference;
-  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Firmy a objekty, se kterými firma spolupracuje. Na webu plynou ve dvou řadách jako nekonečný pás.')]));
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Firmy a partneři zobrazení jako dlaždice s logy. Dokud logo nenahrajete, zobrazí se na webu jen prázdná dlaždice s "+" — jakmile logo nahrajete, dlaždice se jím vyplní.')]));
 
   const panel = el('div', { class: 'card-panel' });
   panel.appendChild(field('Eyebrow', textInput(r.eyebrow, v => r.eyebrow = v)));
   panel.appendChild(field('Nadpis sekce', textInput(r.title, v => r.title = v)));
+  panel.appendChild(field('Podnadpis (volitelné)', textArea(r.subtitle || '', v => r.subtitle = v)));
   root.appendChild(panel);
 
   const listPanel = el('div', { class: 'card-panel' }, [
-    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Reference')])])
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Dlaždice / loga')])])
+  ]);
+  const container = el('div');
+  listPanel.appendChild(container);
+  root.appendChild(listPanel);
+
+  function redraw() {
+    container.innerHTML = '';
+
+    r.items.forEach((item, index) => {
+      const itemBody = el('div');
+      itemBody.appendChild(field('Název firmy / objektu (nepovinné, jen popisek pro prázdnou dlaždici)', textInput(item.name, v => item.name = v)));
+
+      const logoWrap = el('div', { class: 'field-group' }, [
+        el('label', {}, [document.createTextNode('Logo')])
+      ]);
+      const preview = el('div', { class: 'cover-preview' });
+      function updatePreview() {
+        preview.innerHTML = '';
+        if (item.logo) {
+          preview.appendChild(el('img', { src: item.logo, alt: 'Náhled loga' }));
+        }
+      }
+      updatePreview();
+      logoWrap.appendChild(preview);
+      logoWrap.appendChild(textInput(item.logo, v => { item.logo = v; updatePreview(); }, 'Cesta k logu, nebo nahrajte níže'));
+      logoWrap.appendChild(imageUploadButton((path) => {
+        item.logo = path;
+        redraw();
+      }, item.logo ? '+ Nahradit logo' : '+ Nahrát logo'));
+      if (item.logo) {
+        const clearBtn = el('button', { class: 'btn-small', type: 'button', style: 'margin-top:8px' }, [document.createTextNode('Odebrat logo (zpět na prázdnou dlaždici)')]);
+        clearBtn.addEventListener('click', () => { item.logo = ''; redraw(); });
+        logoWrap.appendChild(clearBtn);
+      }
+      itemBody.appendChild(logoWrap);
+
+      const removeBtn = el('button', { class: 'btn-small danger', type: 'button' }, [document.createTextNode('Odebrat dlaždici')]);
+      removeBtn.addEventListener('click', () => { r.items.splice(index, 1); redraw(); });
+
+      const head = el('div', { class: 'repeater-item-head' }, [
+        el('span', { class: 'tag' }, [document.createTextNode(`Dlaždice ${index + 1}`)]),
+        removeBtn
+      ]);
+
+      container.appendChild(el('div', { class: 'repeater-item' }, [head, itemBody]));
+    });
+
+    const addBtn = el('button', { class: 'add-item-btn', type: 'button' }, [document.createTextNode('+ Přidat dlaždici')]);
+    addBtn.addEventListener('click', () => { r.items.push({ name: '', logo: '' }); redraw(); });
+    container.appendChild(addBtn);
+  }
+  redraw();
+}
+
+function renderFaqTab(root) {
+  const f = CONTENT.faq;
+  root.appendChild(el('p', { class: 'section-desc' }, [document.createTextNode('Časté dotazy zobrazené jako rozklikávací seznam.')]));
+
+  const panel = el('div', { class: 'card-panel' });
+  panel.appendChild(field('Eyebrow', textInput(f.eyebrow, v => f.eyebrow = v)));
+  panel.appendChild(field('Nadpis sekce', textInput(f.title, v => f.title = v)));
+  root.appendChild(panel);
+
+  const listPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Otázky a odpovědi')])])
   ]);
   const container = el('div');
   listPanel.appendChild(container);
@@ -623,14 +726,14 @@ function renderReferenceTab(root) {
   function redraw() {
     renderRepeater({
       container,
-      items: r.items,
-      itemLabel: 'Reference',
+      items: f.items,
+      itemLabel: 'Dotaz',
       fieldsConfig: [
-        { render: (item) => field('Název firmy / objektu', textInput(item.name, v => item.name = v)) },
-        { render: (item) => field('Krátký popis', textInput(item.text, v => item.text = v)) }
+        { render: (item) => field('Otázka', textInput(item.question, v => item.question = v)) },
+        { render: (item) => field('Odpověď', textArea(item.answer, v => item.answer = v)) }
       ],
-      onAdd: () => { r.items.push({ name: '', text: '' }); redraw(); },
-      onRemove: (i) => { r.items.splice(i, 1); redraw(); }
+      onAdd: () => { f.items.push({ question: '', answer: '' }); redraw(); },
+      onRemove: (i) => { f.items.splice(i, 1); redraw(); }
     });
   }
   redraw();
