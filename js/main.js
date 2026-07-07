@@ -387,6 +387,12 @@ function renderFooter(data) {
 
   const adminIcon = document.getElementById('footer-admin-icon');
   if (adminIcon) adminIcon.innerHTML = getIcon('lock');
+
+  const creditEl = document.getElementById('footer-credit');
+  if (creditEl && f.credit) {
+    creditEl.textContent = `${f.credit.text} ${f.credit.name}`;
+    creditEl.setAttribute('href', f.credit.url);
+  }
 }
 
 function setupNavToggle() {

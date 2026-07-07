@@ -52,6 +52,20 @@ nemají vlastní položku v menu, ale zobrazují se mezi Hero a Revize.
 10. **FAQ** — časté dotazy, rozklikávací seznam
 11. **Kontakt** — kontaktní údaje + Google mapa s provozovnou
 
+## Patička (footer)
+
+Patička obsahuje odkazy na všechny sekce webu (stejný seznam jako hlavní
+menu — 9 položek: O nás, Revize, Montáže, Školení, Servis, Galerie,
+Reference, FAQ, Kontakt) a v dolním řádku:
+
+- copyright text,
+- **autorský odkaz** ("Web vytvořil PEBMedia") vedoucí na `https://broz-petr.cz`,
+  otevírá se v nové záložce,
+- diskrétní ikonku zámečku vedoucí do administrace (`admin.html`).
+
+Vše (texty, odkazy i autorský odkaz) je editovatelné v adminu, záložka
+Footer.
+
 ## Hero sekce — animované vlnité čáry na pozadí
 
 Úvodní sekce používá efekt inspirovaný konceptem "BackgroundPaths", ale

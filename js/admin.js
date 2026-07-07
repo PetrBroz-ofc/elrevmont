@@ -815,6 +815,18 @@ function renderFooterTab(root) {
     });
   }
   redraw();
+
+  if (!f.credit) f.credit = { text: 'Web vytvořil', name: '', url: '' };
+  const creditPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Autorský odkaz')])])
+  ]);
+  creditPanel.appendChild(el('p', { class: 'field-hint', style: 'margin-bottom:16px' }, [
+    document.createTextNode('Malý odkaz vpravo dole v patičce webu (např. "Web vytvořil PEBMedia").')
+  ]));
+  creditPanel.appendChild(field('Text před jménem', textInput(f.credit.text, v => f.credit.text = v), 'Např. "Web vytvořil"'));
+  creditPanel.appendChild(field('Jméno / název firmy', textInput(f.credit.name, v => f.credit.name = v)));
+  creditPanel.appendChild(field('Odkaz (URL)', textInput(f.credit.url, v => f.credit.url = v), 'Např. https://broz-petr.cz'));
+  root.appendChild(creditPanel);
 }
 
 function renderNavTab(root) {

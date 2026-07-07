@@ -276,10 +276,20 @@
     "tagline": "Revize, montáže a servis elektro v Liberci a okolí.",
     "copyright": "© 2026 Elrevmont. Všechna práva vyhrazena.",
     "links": [
-      { "label": "Úvod", "href": "#hero" },
+      { "label": "O nás", "href": "#o-firme" },
       { "label": "Revize", "href": "#revize" },
       { "label": "Montáže", "href": "#montaze" },
+      { "label": "Školení", "href": "#skoleni" },
+      { "label": "Servis", "href": "#servis" },
+      { "label": "Galerie", "href": "#galerie" },
+      { "label": "Reference", "href": "#reference" },
+      { "label": "FAQ", "href": "#faq" },
       { "label": "Kontakt", "href": "#kontakt" }
-    ]
+    ],
+    "credit": {
+      "text": "Web vytvořil",
+      "name": "PEBMedia",
+      "url": "https://broz-petr.cz"
+    }
   }
 }

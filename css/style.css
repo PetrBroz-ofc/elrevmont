@@ -880,7 +880,13 @@ section { position: relative; }
 }
 .footer-brand .logo { margin-bottom: 12px; }
 .footer-tagline { font-size: 14px; max-width: 320px; }
-.footer-links { display: flex; gap: 26px; flex-wrap: wrap; }
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  max-width: 460px;
+  justify-content: flex-end;
+}
 .footer-links a { font-size: 14px; }
 .footer-links a:hover { color: var(--c-accent); }
 .footer-bottom-row {
@@ -888,8 +894,23 @@ section { position: relative; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  flex-wrap: wrap;
+}
+.footer-bottom-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 .footer-bottom { font-size: 12.5px; font-family: var(--f-mono); }
+.footer-credit {
+  font-size: 12.5px;
+  font-family: var(--f-mono);
+  color: rgba(245,247,250,0.4);
+  padding-left: 14px;
+  border-left: 1px solid rgba(245,247,250,0.15);
+}
+.footer-credit:hover { color: var(--c-accent); }
 .footer-admin-link {
   display: inline-flex;
   align-items: center;
@@ -981,7 +1002,7 @@ section { position: relative; }
   /* Footer: odkazy pod sebou s dostatečnou dotykovou plochou
      (min. 44px výška), ne 4 odkazy na malém řádku vedle sebe. */
   .footer-inner { flex-direction: column; gap: 24px; }
-  .footer-links { flex-direction: column; gap: 2px; width: 100%; }
+  .footer-links { flex-direction: column; gap: 2px; width: 100%; max-width: none; justify-content: flex-start; }
   .footer-links a {
     padding: 12px 0;
     display: block;
@@ -989,6 +1010,9 @@ section { position: relative; }
     border-bottom: 1px solid rgba(245,247,250,0.06);
   }
   .footer-admin-link { align-self: flex-start; }
+  .footer-bottom-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .footer-bottom-left { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .footer-credit { padding-left: 0; border-left: none; }
 
   /* Kontakt: mapa nižší na mobilu, ať nezabírá zbytečně moc místa
      před scrollem k dalšímu obsahu. */
