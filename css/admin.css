@@ -331,3 +331,137 @@ input, textarea, select { font: inherit; }
     font-size: 16px;
   }
 }
+
+/* ---------- Editor obrázků (modální okno) ---------- */
+.img-editor-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.72);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.img-editor-modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 880px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.img-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+.img-editor-header h3 { font-family: var(--f-display); font-size: 17px; }
+.img-editor-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: none; background: var(--c-page);
+  font-size: 20px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c-steel);
+}
+.img-editor-close:hover { background: rgba(225,83,83,0.1); color: var(--c-danger); }
+
+.img-editor-body {
+  display: flex;
+  gap: 24px;
+  padding: 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+.img-editor-canvas-wrap {
+  position: relative;
+  flex: 1.4;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-conic-gradient(#eee 0% 25%, #fafafa 0% 50%) 50% / 20px 20px;
+  border-radius: 8px;
+  min-height: 320px;
+}
+.img-editor-canvas { display: block; max-width: 100%; }
+
+.img-editor-cropbox {
+  position: absolute;
+  border: 2px solid var(--c-accent);
+  box-shadow: 0 0 0 2000px rgba(10, 22, 40, 0.45);
+  cursor: move;
+  touch-action: none;
+}
+.img-editor-handle {
+  position: absolute;
+  width: 18px; height: 18px;
+  background: #fff;
+  border: 2px solid var(--c-accent);
+  border-radius: 50%;
+  touch-action: none;
+}
+.handle-nw { top: -10px; left: -10px; cursor: nwse-resize; }
+.handle-ne { top: -10px; right: -10px; cursor: nesw-resize; }
+.handle-sw { bottom: -10px; left: -10px; cursor: nesw-resize; }
+.handle-se { bottom: -10px; right: -10px; cursor: nwse-resize; }
+
+.img-editor-controls {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.img-editor-row { display: flex; flex-direction: column; gap: 8px; }
+.img-editor-row label {
+  font-size: 12.5px; font-weight: 600; color: var(--c-steel);
+  text-transform: uppercase; letter-spacing: 0.03em;
+}
+.img-editor-row input[type="range"] { width: 100%; }
+.img-editor-row select {
+  padding: 10px 12px; border: 1px solid var(--c-border); border-radius: var(--radius); font-size: 14px; background: #fff;
+}
+.img-editor-slider-with-value { display: flex; align-items: center; gap: 10px; }
+.img-editor-slider-with-value input[type="range"] { flex: 1; }
+.img-editor-value { font-family: var(--f-mono); font-size: 12.5px; color: var(--c-steel); min-width: 42px; text-align: right; }
+
+.img-editor-aspect-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+.img-editor-aspect-btn {
+  padding: 7px 12px; border: 1px solid var(--c-border); border-radius: 100px;
+  font-size: 12.5px; background: #fff; color: var(--c-text);
+}
+.img-editor-aspect-btn:hover { border-color: var(--c-accent-dark); }
+.img-editor-aspect-btn.active { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
+
+.img-editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+.img-editor-footer .btn-small { width: auto; }
+.img-editor-footer .btn { width: auto; padding: 11px 22px; }
+
+@media (max-width: 760px) {
+  .img-editor-body { flex-direction: column; padding: 16px; gap: 16px; }
+  .img-editor-canvas-wrap { min-height: 260px; }
+  .img-editor-modal { max-height: 96vh; }
+  .img-editor-footer { padding: 14px 16px; }
+  .img-editor-footer .btn-small,
+  .img-editor-footer .btn { flex: 1; }
+  .img-editor-close { width: 40px; height: 40px; }
+  .img-editor-handle { width: 26px; height: 26px; }
+  .handle-nw { top: -14px; left: -14px; }
+  .handle-ne { top: -14px; right: -14px; }
+  .handle-sw { bottom: -14px; left: -14px; }
+  .handle-se { bottom: -14px; right: -14px; }
+}

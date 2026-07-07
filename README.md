@@ -22,6 +22,7 @@ js/hero-paths.js       animované vlnité čáry na pozadí hero sekce + animace
 js/border-glow.js      zářící okraj karet reagující na kurzor (vanilla JS, bez frameworku)
 js/click-spark.js      jiskry při kliknutí kdekoliv na stránce (vanilla JS, bez frameworku)
 js/admin.js            logika administrace (login, formuláře, ukládání, upload fotek)
+js/image-editor.js     editor obrázků (oříznutí, jas/kontrast, otočení, změna velikosti) při nahrávání v adminu
 js/icons.js            sada SVG ikon
 data/content.json      veškerý textový/obsahový obsah webu
 data/theme.json         barvy a fonty
@@ -128,6 +129,27 @@ Max), a to na výšku i na šířku (landscape).
   stránku.
 - Malá tlačítka (nahrát fotku, odebrat položku) mají na mobilu zvětšenou
   dotykovou plochu oproti desktopové verzi.
+
+## Editor obrázků při nahrávání
+
+Kdekoliv v adminu, kde se nahrává fotka z počítače nebo mobilu (Hero pozadí,
+Galerie — titulní fotka i fotky v albu, Reference — loga), se po výběru
+souboru nejdřív otevře editor obrázků (`js/image-editor.js`) — teprve
+upravený výsledek se odešle na server. Nic se nenahrává rovnou napřímo.
+
+Editor umožňuje:
+- **Oříznutí** — přetažením rámečku nebo jeho rohů, s volitelným pevným
+  poměrem stran (volný výběr, 1:1, 4:3, 16:9, 3:4 na výšku).
+- **Otočení** o 90°.
+- **Jas a kontrast** — jemné doladění přes posuvníky.
+- **Změnu velikosti** — nastavení max. šířky výstupu (640 / 1280 / 1920 px,
+  nebo beze změny), což zmenší i objem dat, které se posílají na server.
+- **Kvalitu komprese** (JPEG) — posuvník 50–100 %, kompromis mezi velikostí
+  souboru a kvalitou obrazu.
+
+Implementace je čistý vanilla JS s `<canvas>`, bez závislosti na externích
+knihovnách — funguje stejně na desktopu i na mobilu (ořezový rámeček se dá
+tahat prstem i myší).
 
 ## Galerie — kategorie a nahrávání fotek
 

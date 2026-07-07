@@ -155,6 +155,8 @@ async function uploadImage(file, folder = 'gallery') {
 }
 
 // Vytvoří tlačítko "Nahrát fotku" s file inputem, náhledem a stavovým hlášením.
+// Po výběru souboru se otevře editor obrázků (oříznutí, jas/kontrast,
+// otočení, změna velikosti) — teprve výsledek z editoru se nahraje na server.
 // onUploaded(path) se zavolá po úspěšném nahrání s cestou k souboru v repu.
 function imageUploadButton(onUploaded, label = '+ Nahrát fotku') {
   const wrap = el('div', { class: 'image-upload' });
@@ -162,14 +164,11 @@ function imageUploadButton(onUploaded, label = '+ Nahrát fotku') {
   const btn = el('button', { class: 'btn-small', type: 'button' }, [document.createTextNode(label)]);
   const status = el('span', { class: 'upload-status' });
 
-  btn.addEventListener('click', () => input.click());
-  input.addEventListener('change', async () => {
-    const file = input.files && input.files[0];
-    if (!file) return;
+  async function handleEditedFile(editedFile) {
     status.textContent = 'Nahrávám…';
     btn.setAttribute('disabled', 'disabled');
     try {
-      const path = await uploadImage(file);
+      const path = await uploadImage(editedFile);
       status.textContent = 'Nahráno ✓';
       onUploaded(path);
       setTimeout(() => { status.textContent = ''; }, 3000);
@@ -177,7 +176,23 @@ function imageUploadButton(onUploaded, label = '+ Nahrát fotku') {
       status.textContent = 'Chyba: ' + err.message;
     } finally {
       btn.removeAttribute('disabled');
+    }
+  }
+
+  btn.addEventListener('click', () => input.click());
+  input.addEventListener('change', () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    if (typeof openImageEditor === 'function') {
+      openImageEditor(file, {
+        onConfirm: (editedFile) => { input.value = ''; handleEditedFile(editedFile); },
+        onCancel: () => { input.value = ''; }
+      });
+    } else {
+      // Záložní chování, kdyby se editor z nějakého důvodu nenačetl —
+      // nahraje se rovnou originální soubor beze změn.
       input.value = '';
+      handleEditedFile(file);
     }
   });
 
