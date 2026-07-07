@@ -101,6 +101,34 @@ Respektuje `prefers-reduced-motion` — lidem s vypnutými animacemi se efekt
 rovnou nenačte (canvas se ani nevytvoří), protože jde o čistě dekorativní
 prvek bez informační hodnoty.
 
+## Mobilní kompatibilita
+
+Web i administrace jsou otestované a upravené pro plynulé fungování na všech
+běžných velikostech mobilů — od malých Android telefonů (320 px šířky) přes
+iPhone SE, běžné iPhony a Android telefony, až po větší modely (iPhone 14 Pro
+Max), a to na výšku i na šířku (landscape).
+
+**Veřejný web:**
+- Žádné horizontální přetečení stránky na žádné testované šířce.
+- Hlavní menu se pod 900 px šířky přepíná na výsuvný panel ovládaný
+  hamburger tlačítkem (velikost dotykové plochy 44×44 px).
+- Tlačítka, odkazy v patičce a další klikatelné prvky mají na mobilu
+  dostatečně velkou dotykovou plochu (min. ~44 px) podle doporučení
+  Apple/Google pro pohodlné ovládání prstem.
+- Zvláštní úpravy pro velmi malé telefony (do 359 px šířky) a pro
+  telefony položené na šířku s nízkou výškou obrazovky.
+
+**Administrace (`admin.html`):**
+- Postranní menu se sekcemi (Hero, Služby, Revize, ...) se pod 900 px šířky
+  mění na výsuvný panel s vlastním hamburger tlačítkem v horní liště —
+  stejný vzor jako na veřejném webu, aby to bylo intuitivní.
+- Po výběru sekce se menu na mobilu samo zavře a obsah se posune nahoru.
+- Formulářová pole mají na mobilu velikost písma 16 px, aby telefon
+  (především iOS Safari) při kliknutí do pole samovolně nepřibližoval
+  stránku.
+- Malá tlačítka (nahrát fotku, odebrat položku) mají na mobilu zvětšenou
+  dotykovou plochu oproti desktopové verzi.
+
 ## Galerie — kategorie a nahrávání fotek
 
 V adminu (záložka Galerie) lze vytvářet libovolný počet kategorií (alb). Každá

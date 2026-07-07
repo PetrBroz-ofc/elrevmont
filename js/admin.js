@@ -899,6 +899,11 @@ function switchTab(tabKey) {
   const content = document.getElementById('admin-content');
   content.innerHTML = '';
   TABS[tabKey].render(content);
+  closeMobileSidebar();
+  // Po přepnutí sekce na mobilu odscrolujeme obsah nahoru, ať uživatel
+  // hned vidí začátek nového formuláře, ne kde skončil scroll v předchozím.
+  document.querySelector('.admin-main')?.scrollTo?.(0, 0);
+  window.scrollTo(0, 0);
 }
 
 document.getElementById('admin-nav').addEventListener('click', (e) => {
@@ -906,6 +911,27 @@ document.getElementById('admin-nav').addEventListener('click', (e) => {
   if (!btn) return;
   switchTab(btn.dataset.tab);
 });
+
+// ---------- Mobilní výsuvné menu sekcí ----------
+
+function openMobileSidebar() {
+  document.getElementById('admin-sidebar').classList.add('open');
+  document.getElementById('admin-sidebar-overlay').classList.add('open');
+}
+function closeMobileSidebar() {
+  document.getElementById('admin-sidebar')?.classList.remove('open');
+  document.getElementById('admin-sidebar-overlay')?.classList.remove('open');
+}
+
+document.getElementById('admin-menu-toggle')?.addEventListener('click', () => {
+  const sidebar = document.getElementById('admin-sidebar');
+  if (sidebar.classList.contains('open')) {
+    closeMobileSidebar();
+  } else {
+    openMobileSidebar();
+  }
+});
+document.getElementById('admin-sidebar-overlay')?.addEventListener('click', closeMobileSidebar);
 
 // ---------- Saving ----------
 

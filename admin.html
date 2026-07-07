@@ -24,7 +24,7 @@
 <!-- ADMIN APP -->
 <div id="admin-app" class="admin-app" hidden>
 
-  <aside class="admin-sidebar">
+  <aside class="admin-sidebar" id="admin-sidebar">
     <div class="admin-logo"><span class="dot"></span> ELREVMONT <span class="login-logo-sub">/ admin</span></div>
     <nav class="admin-nav" id="admin-nav">
       <button data-tab="hero" class="active">Hero</button>
@@ -48,9 +48,13 @@
       <button id="logout-btn" class="btn btn-ghost-small">Odhlásit se</button>
     </div>
   </aside>
+  <div class="admin-sidebar-overlay" id="admin-sidebar-overlay"></div>
 
   <main class="admin-main">
     <header class="admin-topbar">
+      <button class="admin-menu-toggle" id="admin-menu-toggle" aria-label="Menu sekcí">
+        <span></span><span></span><span></span>
+      </button>
       <div id="admin-tab-title">Hero</div>
       <div class="admin-topbar-actions">
         <span id="save-status" class="save-status"></span>
