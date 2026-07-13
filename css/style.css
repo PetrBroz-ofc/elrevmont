@@ -306,7 +306,7 @@ section { position: relative; }
 
 .hero-eyebrow-tag {
   font-family: var(--f-mono);
-  font-size: 12.5px;
+  font-size: 15px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-accent);
@@ -333,6 +333,9 @@ section { position: relative; }
   opacity: 0;
   transform: translateY(40px);
   animation: hero-letter-in 0.6s cubic-bezier(0.2, 0.65, 0.3, 1) forwards;
+}
+.hero-title .letter-highlight {
+  color: #E4463A;
 }
 @keyframes hero-letter-in {
   to { opacity: 1; transform: translateY(0); }
@@ -1036,7 +1039,7 @@ section { position: relative; }
   .container { padding: 0 14px; }
   .hero-title { font-size: clamp(30px, 8vw, 40px); }
   .section-title { font-size: clamp(24px, 7vw, 30px); }
-  .hero-eyebrow-tag { font-size: 11px; }
+  .hero-eyebrow-tag { font-size: 13px; }
   .hero-subtitle { font-size: 15.5px; }
   .py { padding: 48px 0; }
   .logo { font-size: 14px; }

@@ -465,3 +465,40 @@ input, textarea, select { font: inherit; }
   .handle-sw { bottom: -14px; left: -14px; }
   .handle-se { bottom: -14px; right: -14px; }
 }
+
+/* ---------- Hero: editor zvýraznění písmen v nadpisu ---------- */
+.hero-highlight-row {
+  align-items: end;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--c-border);
+}
+.hero-highlight-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.hero-highlight-word {
+  padding: 11px 14px;
+  background: var(--c-page);
+  border-radius: var(--radius);
+  font-family: var(--f-mono);
+  font-size: 14px;
+  color: var(--c-text);
+}
+.hero-highlight-row input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  font-size: 14.5px;
+}
+.hero-highlight-preview {
+  margin-top: 16px;
+  padding: 20px;
+  background: var(--c-bg);
+  border-radius: var(--radius);
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 20px;
+  color: #fff;
+  text-align: center;
+  line-height: 1.4;
+}
+.hero-highlight-red { color: #E4463A; }

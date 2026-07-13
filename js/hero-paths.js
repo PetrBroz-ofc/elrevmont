@@ -89,7 +89,12 @@ function initHeroPaths() {
 // Rozdělí text nadpisu na slova a písmena, každé písmeno zabalí do <span>
 // s animací "hero-letter-in" a postupným zpožděním — ekvivalent
 // písmenkové animace z originální komponenty (motion.span + delay).
-function animateHeroTitle() {
+// `highlightCounts` (volitelné): pole čísel, jedno na každé slovo napříč
+// všemi řádky v pořadí zleva doprava / shora dolů — udává, kolik prvních
+// písmen daného slova se má obarvit zvýrazňovací (červenou) barvou přes
+// třídu .letter-highlight. Např. pro "Elektro revize\na montáže" a
+// [3, 3, 0, 4] se zvýrazní "Ele", "rev", nic u "a", "mont".
+function animateHeroTitle(highlightCounts) {
   const titleEl = document.getElementById('hero-title');
   if (!titleEl) return;
 
@@ -101,6 +106,7 @@ function animateHeroTitle() {
   titleEl.setAttribute('aria-label', rawText);
 
   let globalIndex = 0;
+  let wordCounter = 0;
   lines.forEach((line, lineIndex) => {
     const words = line.split(' ').filter(Boolean);
     words.forEach((word, wordIndex) => {
@@ -108,14 +114,20 @@ function animateHeroTitle() {
       wordSpan.className = 'word';
       wordSpan.setAttribute('aria-hidden', 'true');
 
-      word.split('').forEach(letter => {
+      const highlightCount = Array.isArray(highlightCounts) ? (highlightCounts[wordCounter] || 0) : 0;
+
+      word.split('').forEach((letter, letterIndex) => {
         const letterSpan = document.createElement('span');
         letterSpan.className = 'letter';
+        if (letterIndex < highlightCount) {
+          letterSpan.classList.add('letter-highlight');
+        }
         letterSpan.textContent = letter;
         letterSpan.style.animationDelay = `${globalIndex * 0.035}s`;
         wordSpan.appendChild(letterSpan);
         globalIndex++;
       });
+      wordCounter++;
 
       // Skutečná mezera mezi slovy jako textový uzel (spolehlivější
       // než CSS ::before, které se v kombinaci s letter-spacing

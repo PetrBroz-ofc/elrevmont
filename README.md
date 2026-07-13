@@ -90,6 +90,34 @@ Přístupnost: nadpis má nastavený `aria-label` s plným textem, takže čteč
 obrazovky přečtou smysluplný text i přes to, že vizuálně je rozdělený na
 jednotlivá písmenka v `<span>` elementech.
 
+### Kde v kódu upravit hero sekci
+
+**Velikost textu "Milan Dolenský – elektro" (malý text nad nadpisem):**
+Soubor `css/style.css`, hledej třídu `.hero-eyebrow-tag` (má vlastní blok
+zhruba na začátku sekce „1. Hero"). Řádek `font-size: 15px;` mění velikost
+na desktopu. O pár desítek řádků níž je i verze pro mobil v bloku
+`@media (max-width: 359px) { .hero-eyebrow-tag { font-size: 13px; } }` —
+tu uprav zvlášť, pokud chceš jinou velikost na malých telefonech.
+
+Samotný text (obsah, ne velikost) se mění v adminu, záložka **Hero** → pole
+„Malý text nad nadpisem", nebo přímo v `data/content.json` → `hero.eyebrowTag`.
+
+**Barevné zvýraznění písmen v nadpisu "Elektro revize a montáže":**
+Editovatelné přímo v adminu — záložka **Hero** → panel „Barevné zvýraznění
+v nadpisu". U každého slova nadpisu je pole „Počet zvýrazněných písmen"
+(0 = beze změny) a živý náhled dole hned ukáže výsledek. Když v nadpisu
+přidáš nebo ubereš slovo, pole se automaticky přegenerují podle aktuálního
+textu — hodnoty pro zachovaná slova zůstanou, nové slovo dostane výchozích 0.
+
+Data se ukládají do `data/content.json` → `hero.titleHighlightCounts`
+(seznam čísel, jedno na každé slovo nadpisu v pořadí zleva doprava / shora
+dolů). Výchozí nastavení `[3, 3, 0, 4]` zvýrazňuje "Ele" (Elektro), "rev"
+(revize), nic u "a", "mont" (montáže) — dohromady tvoří zkratku ELE-REV-MONT.
+
+Samotná barva zvýraznění (teplá červená) je v `css/style.css`, třída
+`.hero-title .letter-highlight` — řádek `color: #E4463A;`. Tohle se mění
+jen v kódu, admin barvu needituje.
+
 ## BorderGlow — zářící okraj karet služeb a školení
 
 Karty v sekcích Služby a Školení mají efekt inspirovaný komponentou

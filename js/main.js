@@ -109,7 +109,7 @@ function renderHero(data) {
     initHeroPaths();
   }
   if (typeof animateHeroTitle === 'function') {
-    animateHeroTitle();
+    animateHeroTitle(h.titleHighlightCounts);
   }
 }
 

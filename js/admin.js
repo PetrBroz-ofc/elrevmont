@@ -228,7 +228,9 @@ function renderHeroTab(root) {
 
   const panel = el('div', { class: 'card-panel' });
   panel.appendChild(field('Malý text nad nadpisem', textInput(h.eyebrowTag, v => h.eyebrowTag = v), 'Např. jméno a obor firmy.'));
-  panel.appendChild(field('Hlavní nadpis', textArea(h.title, v => h.title = v), 'Nový řádek v textu = zalomení řádku na webu.'));
+
+  const titleField = field('Hlavní nadpis', textArea(h.title, v => { h.title = v; redrawHighlightPanel(); }), 'Nový řádek v textu = zalomení řádku na webu.');
+  panel.appendChild(titleField);
   panel.appendChild(field('Podnadpis', textArea(h.subtitle, v => h.subtitle = v)));
 
   const row = el('div', { class: 'field-row' });
@@ -238,6 +240,65 @@ function renderHeroTab(root) {
 
   panel.appendChild(field('Text nápovědy ke scrollování', textInput(h.scrollCueText, v => h.scrollCueText = v)));
   root.appendChild(panel);
+
+  // ---------- Barevné zvýraznění písmen v nadpisu ----------
+  const highlightPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Barevné zvýraznění v nadpisu')])])
+  ]);
+  highlightPanel.appendChild(el('p', { class: 'field-hint', style: 'margin-bottom:16px' }, [
+    document.createTextNode('U každého slova nastav, kolik prvních písmen se má zbarvit červeně (0 = beze změny). Náhled dole ukazuje aktuální výsledek.')
+  ]));
+  const highlightContainer = el('div');
+  const previewEl = el('div', { class: 'hero-highlight-preview' });
+  highlightPanel.appendChild(highlightContainer);
+  highlightPanel.appendChild(previewEl);
+  root.appendChild(highlightPanel);
+
+  function getWords() {
+    // Stejná logika jako v js/hero-paths.js: rozdělíme podle řádků a mezer,
+    // ať pole sedí přesně na slova tak, jak se skutečně vykreslí na webu.
+    return h.title.split('\n').flatMap(line => line.split(' ').filter(Boolean));
+  }
+
+  function redrawHighlightPanel() {
+    const words = getWords();
+    if (!Array.isArray(h.titleHighlightCounts)) h.titleHighlightCounts = [];
+    // Zarovnáme délku pole počtů s aktuálním počtem slov (nové slovo = 0, přebytečné zahodíme).
+    h.titleHighlightCounts = words.map((_, i) => h.titleHighlightCounts[i] || 0);
+
+    highlightContainer.innerHTML = '';
+    words.forEach((word, i) => {
+      const row2 = el('div', { class: 'field-row hero-highlight-row' });
+      const wordLabel = el('div', { class: 'hero-highlight-word' }, [document.createTextNode(`„${word}“`)]);
+      const countInput = el('input', { type: 'number', min: '0', max: String(word.length) });
+      countInput.value = String(Math.min(h.titleHighlightCounts[i], word.length));
+      countInput.addEventListener('input', () => {
+        const val = Math.max(0, Math.min(Number(countInput.value) || 0, word.length));
+        h.titleHighlightCounts[i] = val;
+        updatePreview();
+      });
+      row2.appendChild(el('div', { class: 'field-group' }, [el('label', {}, [document.createTextNode('Slovo')]), wordLabel]));
+      row2.appendChild(el('div', { class: 'field-group' }, [el('label', {}, [document.createTextNode('Počet zvýrazněných písmen')]), countInput]));
+      highlightContainer.appendChild(row2);
+    });
+
+    updatePreview();
+  }
+
+  function updatePreview() {
+    const words = getWords();
+    previewEl.innerHTML = '';
+    words.forEach((word, i) => {
+      const count = h.titleHighlightCounts[i] || 0;
+      const highlighted = word.slice(0, count);
+      const rest = word.slice(count);
+      if (highlighted) previewEl.appendChild(el('span', { class: 'hero-highlight-red' }, [document.createTextNode(highlighted)]));
+      if (rest) previewEl.appendChild(document.createTextNode(rest));
+      if (i < words.length - 1) previewEl.appendChild(document.createTextNode(' '));
+    });
+  }
+
+  redrawHighlightPanel();
 
   const bgPanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Záložní obrázek (nepovinné)')])])
