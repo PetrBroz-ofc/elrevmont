@@ -1,14 +1,14 @@
 {
   "colors": {
-    "bg": "#2079fe",
-    "bgSoft": "#066dfe",
+    "bg": "#4791ff",
+    "bgSoft": "#0F2038",
     "bgLight": "#F5F7FA",
     "accent": "#2E9BF0",
     "accentDark": "#1C7DD1",
     "steel": "#64748B",
     "safe": "#1E8E5A",
     "textLight": "#F5F7FA",
-    "textDark": "#125df3"
+    "textDark": "#101828"
   },
   "fonts": {
     "display": "Space Grotesk",
