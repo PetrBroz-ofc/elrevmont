@@ -58,12 +58,28 @@
       <div id="admin-tab-title">Hero</div>
       <div class="admin-topbar-actions">
         <span id="save-status" class="save-status"></span>
+        <button id="preview-toggle-btn" class="btn btn-outline-small" style="width:auto" type="button">Skrýt náhled</button>
         <button id="save-btn" class="btn btn-primary">Uložit změny</button>
       </div>
     </header>
 
-    <div class="admin-content" id="admin-content">
-      <!-- Panely se generují dynamicky přes js/admin.js -->
+    <div class="admin-body" id="admin-body">
+      <div class="admin-content" id="admin-content">
+        <!-- Panely se generují dynamicky přes js/admin.js -->
+      </div>
+
+      <div class="admin-preview" id="admin-preview">
+        <div class="admin-preview-bar">
+          <span class="admin-preview-label">Živý náhled webu</span>
+          <div class="admin-preview-size-toggle">
+            <button type="button" class="active" data-preview-size="desktop" title="Náhled na počítač">Počítač</button>
+            <button type="button" data-preview-size="mobile" title="Náhled na mobil">Mobil</button>
+          </div>
+        </div>
+        <div class="admin-preview-frame-wrap">
+          <iframe id="admin-preview-iframe" src="index.html?preview=1" title="Náhled webu"></iframe>
+        </div>
+      </div>
     </div>
   </main>
 </div>

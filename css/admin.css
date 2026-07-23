@@ -170,7 +170,93 @@ input, textarea, select { font: inherit; }
 }
 .admin-sidebar-overlay.open { display: block; }
 
-.admin-content { padding: 32px; max-width: 880px; }
+.admin-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.admin-content {
+  padding: 32px;
+  max-width: 880px;
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* ---------- Živý náhled webu ---------- */
+.admin-preview {
+  width: 42%;
+  min-width: 360px;
+  max-width: 640px;
+  border-left: 1px solid var(--c-border);
+  background: var(--c-page);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.admin-preview.hidden { display: none; }
+.admin-preview-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--c-border);
+  background: #fff;
+  flex-shrink: 0;
+}
+.admin-preview-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--c-steel);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.admin-preview-size-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--c-page);
+  border-radius: var(--radius);
+  padding: 3px;
+}
+.admin-preview-size-toggle button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  font-size: 12px;
+  color: var(--c-steel);
+}
+.admin-preview-size-toggle button.active {
+  background: #fff;
+  color: var(--c-text);
+  box-shadow: 0 1px 2px rgba(16,24,40,0.08);
+}
+.admin-preview-frame-wrap {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: #d8dde3;
+}
+.admin-preview-frame-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(16,24,40,0.15);
+  transition: width 0.25s ease, max-width 0.25s ease;
+}
+.admin-preview.size-mobile .admin-preview-frame-wrap iframe {
+  max-width: 390px;
+  height: 100%;
+}
+
+@media (max-width: 1200px) {
+  .admin-preview { width: 38%; min-width: 300px; }
+}
 
 /* ---------- Form building blocks ---------- */
 .field-group { margin-bottom: 22px; }
@@ -228,6 +314,13 @@ input, textarea, select { font: inherit; }
   width: 44px; height: 44px; border: 1px solid var(--c-border); border-radius: 8px; padding: 2px; background: #fff;
 }
 .theme-swatch-row input[type="text"] { flex: 1; font-family: var(--f-mono); }
+
+.theme-size-row { display: flex; align-items: center; gap: 14px; }
+.theme-size-row input[type="range"] { flex: 1; }
+.theme-size-value {
+  font-family: var(--f-mono); font-size: 13px; color: var(--c-steel);
+  min-width: 48px; text-align: right; flex-shrink: 0;
+}
 
 /* ---------- Image upload / gallery album editing ---------- */
 .image-upload { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
@@ -303,6 +396,13 @@ input, textarea, select { font: inherit; }
 
   .album-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
   .theme-swatch-row { flex-wrap: wrap; }
+
+  /* Na mobilu není pro náhled vedle formuláře místo — schováme ho
+     a necháme jen tlačítko "Zobrazit web" v postranním menu, kterým
+     si Milan otevře plnohodnotný web v nové záložce. */
+  .admin-body { flex-direction: column; }
+  .admin-preview { display: none !important; }
+  #preview-toggle-btn { display: none; }
 
   /* Malá tlačítka (upload, odebrat, atd.) dostávají na mobilu
      vyšší minimální dotykovou plochu — na desktopu se ovládají

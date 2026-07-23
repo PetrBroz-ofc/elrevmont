@@ -5,10 +5,63 @@
    a frontend ho jen vykresluje.
    ========================================================= */
 
+// Náhledový režim: web běží uvnitř <iframe> v admin panelu (?preview=1
+// v URL) — viz initPreviewMode() a renderAll() níže v souboru.
+const IS_PREVIEW_MODE = new URLSearchParams(location.search).has('preview');
+
 async function loadContent() {
   const res = await fetch('data/content.json', { cache: 'no-store' });
   if (!res.ok) throw new Error('Nepodařilo se načíst data/content.json');
   return res.json();
+}
+
+async function loadTheme() {
+  try {
+    const res = await fetch('data/theme.json', { cache: 'no-store' });
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    // Vzhled (barvy) není kritický pro fungování webu — pokud se
+    // nepodaří načíst, web běží dál s výchozími barvami z CSS.
+    console.error('Nepodařilo se načíst data/theme.json, používám výchozí barvy.', err);
+    return null;
+  }
+}
+
+// Mapování klíčů z theme.json na CSS custom properties použité v style.css.
+const THEME_COLOR_VARS = {
+  bg: '--c-bg',
+  bgSoft: '--c-bg-soft',
+  bgLight: '--c-bg-light',
+  accent: '--c-accent',
+  accentDark: '--c-accent-dark',
+  steel: '--c-steel',
+  safe: '--c-safe',
+  textLight: '--c-text-light',
+  textDark: '--c-text-dark',
+  heroHighlight: '--c-hero-highlight'
+};
+
+const THEME_SIZE_VARS = {
+  logoSize: '--size-nav-logo',
+  heroEyebrowSize: '--size-hero-eyebrow'
+};
+
+function applyTheme(theme) {
+  if (!theme) return;
+  const root = document.documentElement;
+  if (theme.colors) {
+    Object.entries(theme.colors).forEach(([key, value]) => {
+      const cssVar = THEME_COLOR_VARS[key];
+      if (cssVar && value) root.style.setProperty(cssVar, value);
+    });
+  }
+  if (theme.sizes) {
+    Object.entries(theme.sizes).forEach(([key, value]) => {
+      const cssVar = THEME_SIZE_VARS[key];
+      if (cssVar && value) root.style.setProperty(cssVar, `${value}px`);
+    });
+  }
 }
 
 function el(tag, props = {}, children = []) {
@@ -412,6 +465,13 @@ function setupNavToggle() {
 
 function setupScrollReveal() {
   const targets = document.querySelectorAll('[data-reveal]');
+  if (IS_PREVIEW_MODE) {
+    // V malém náhledovém okně admin panelu by opakované "zmizet a
+    // nafadovat znovu" při každé úpravě jen rušivě blikalo — rovnou
+    // vše zobrazíme.
+    targets.forEach(t => t.classList.add('is-visible'));
+    return;
+  }
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -423,37 +483,79 @@ function setupScrollReveal() {
   targets.forEach(t => io.observe(t));
 }
 
+// Vykreslí (nebo znovu-vykreslí) celou stránku z dat. Používá se jak
+// při běžném načtení webu, tak opakovaně v náhledovém režimu uvnitř
+// admin panelu, pokaždé když přijde aktualizovaná data přes postMessage.
+function renderAll(data, theme) {
+  applyTheme(theme);
+  renderSEO(data);
+  renderNav(data);
+  renderHero(data);
+  renderAboutFirm(data);
+  renderServices(data);
+  renderRevize(data);
+  renderMontaze(data);
+  renderSkoleni(data);
+  renderServis(data);
+  renderGallery(data);
+  renderReference(data);
+  renderFAQ(data);
+  renderContact(data);
+  renderFooter(data);
+  setupNavToggle();
+  setupScrollReveal();
+
+  // BorderGlow efekt na kartách služeb a školení (vanilla JS,
+  // viz js/border-glow.js) — musí běžet až po vykreslení karet.
+  if (typeof initBorderGlow === 'function') {
+    initBorderGlow('.service-card', { edgeSensitivity: 35 });
+    initBorderGlow('.skoleni-card', { edgeSensitivity: 35 });
+  }
+
+  // ClickSpark efekt pro celý web (vanilla JS, viz js/click-spark.js).
+  // V náhledovém režimu (uvnitř admin iframe) se nespouští, aby při
+  // každém překreslení nepřibýval další <canvas> navrch.
+  if (!IS_PREVIEW_MODE && typeof initClickSpark === 'function') {
+    initClickSpark({ sparkColor: '#2E9BF0', sparkCount: 8, sparkRadius: 20, duration: 420 });
+  }
+}
+
+// Náhledový režim uvnitř admin panelu: web běží v <iframe> s ?preview=1
+// v URL, nenačítá data ze souborů na disku, ale čeká na zprávy přes
+// postMessage z rodičovského okna — díky tomu se každá změna v adminu
+// (i bez uložení) hned promítne do vzhledu náhledu.
+function initPreviewMode() {
+  let lastData = null;
+  let lastTheme = null;
+
+  window.addEventListener('message', (event) => {
+    if (!event.data || event.data.type !== 'elrevmont-preview-update') return;
+    lastData = event.data.content || lastData;
+    lastTheme = event.data.theme || lastTheme;
+    if (lastData) {
+      try {
+        renderAll(lastData, lastTheme);
+      } catch (err) {
+        console.error('Chyba při vykreslování náhledu:', err);
+      }
+    }
+  });
+
+  // Dáme rodičovskému oknu vědět, že náhled je připravený přijímat data
+  // (řeší situaci, kdy admin odešle první zprávu dřív, než se iframe stihne načíst).
+  if (window.parent) {
+    window.parent.postMessage({ type: 'elrevmont-preview-ready' }, '*');
+  }
+}
+
 (async function init() {
+  if (IS_PREVIEW_MODE) {
+    initPreviewMode();
+    return;
+  }
   try {
-    const data = await loadContent();
-    renderSEO(data);
-    renderNav(data);
-    renderHero(data);
-    renderAboutFirm(data);
-    renderServices(data);
-    renderRevize(data);
-    renderMontaze(data);
-    renderSkoleni(data);
-    renderServis(data);
-    renderGallery(data);
-    renderReference(data);
-    renderFAQ(data);
-    renderContact(data);
-    renderFooter(data);
-    setupNavToggle();
-    setupScrollReveal();
-
-    // BorderGlow efekt na kartách služeb a školení (vanilla JS,
-    // viz js/border-glow.js) — musí běžet až po vykreslení karet.
-    if (typeof initBorderGlow === 'function') {
-      initBorderGlow('.service-card', { edgeSensitivity: 35 });
-      initBorderGlow('.skoleni-card', { edgeSensitivity: 35 });
-    }
-
-    // ClickSpark efekt pro celý web (vanilla JS, viz js/click-spark.js).
-    if (typeof initClickSpark === 'function') {
-      initClickSpark({ sparkColor: '#2E9BF0', sparkCount: 8, sparkRadius: 20, duration: 420 });
-    }
+    const [data, theme] = await Promise.all([loadContent(), loadTheme()]);
+    renderAll(data, theme);
   } catch (err) {
     console.error('Chyba při načítání obsahu webu:', err);
     document.body.innerHTML = '<div style="padding:80px;text-align:center;font-family:sans-serif">Nepodařilo se načíst obsah stránky. Zkuste to prosím později.</div>';

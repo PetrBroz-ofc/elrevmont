@@ -104,19 +104,25 @@ Samotný text (obsah, ne velikost) se mění v adminu, záložka **Hero** → po
 
 **Barevné zvýraznění písmen v nadpisu "Elektro revize a montáže":**
 Editovatelné přímo v adminu — záložka **Hero** → panel „Barevné zvýraznění
-v nadpisu". U každého slova nadpisu je pole „Počet zvýrazněných písmen"
-(0 = beze změny) a živý náhled dole hned ukáže výsledek. Když v nadpisu
-přidáš nebo ubereš slovo, pole se automaticky přegenerují podle aktuálního
-textu — hodnoty pro zachovaná slova zůstanou, nové slovo dostane výchozích 0.
+v nadpisu". Nahoře je **výběr barvy** (color picker + textové pole s hex
+kódem), pod ním u každého slova nadpisu pole „Počet zvýrazněných písmen"
+(0 = beze změny), a živý náhled dole hned ukáže výsledek v aktuální barvě.
+Když v nadpisu přidáš nebo ubereš slovo, pole se automaticky přegenerují
+podle aktuálního textu — hodnoty pro zachovaná slova zůstanou, nové slovo
+dostane výchozích 0.
 
-Data se ukládají do `data/content.json` → `hero.titleHighlightCounts`
-(seznam čísel, jedno na každé slovo nadpisu v pořadí zleva doprava / shora
-dolů). Výchozí nastavení `[3, 3, 0, 4]` zvýrazňuje "Ele" (Elektro), "rev"
-(revize), nic u "a", "mont" (montáže) — dohromady tvoří zkratku ELE-REV-MONT.
+Stejnou barvu lze upravit i v záložce **Vzhled**, kde se jmenuje „Zvýraznění
+písmen v hero nadpisu" — je to jedna a ta samá hodnota, jen zobrazená na
+dvou místech pro pohodlí.
 
-Samotná barva zvýraznění (teplá červená) je v `css/style.css`, třída
-`.hero-title .letter-highlight` — řádek `color: #E4463A;`. Tohle se mění
-jen v kódu, admin barvu needituje.
+Data se ukládají do dvou souborů:
+- `data/content.json` → `hero.titleHighlightCounts` (seznam čísel, jedno na
+  každé slovo nadpisu v pořadí zleva doprava / shora dolů). Výchozí nastavení
+  `[3, 3, 0, 4]` zvýrazňuje "Ele" (Elektro), "rev" (revize), nic u "a", "mont"
+  (montáže) — dohromady tvoří zkratku ELE-REV-MONT.
+- `data/theme.json` → `colors.heroHighlight` (barva jako hex kód, výchozí
+  `#E4463A`). Web tuhle hodnotu při načtení automaticky promítne do CSS
+  proměnné `--c-hero-highlight` (viz `js/main.js`, funkce `applyTheme`).
 
 ## BorderGlow — zářící okraj karet služeb a školení
 

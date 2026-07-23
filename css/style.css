@@ -16,8 +16,11 @@
   --c-safe: #1E8E5A;
   --c-text-light: #F5F7FA;
   --c-text-dark: #101828;
+  --c-hero-highlight: #E4463A;
   --c-border: rgba(245, 247, 250, 0.12);
   --c-border-dark: rgba(16, 24, 40, 0.10);
+  --size-nav-logo: 16px;
+  --size-hero-eyebrow: 15px;
 
   --f-display: 'Space Grotesk', sans-serif;
   --f-body: 'Inter', sans-serif;
@@ -164,6 +167,15 @@ section { position: relative; }
   gap: 9px;
   text-transform: uppercase;
 }
+/* Logo v horní navigaci má nastavitelnou velikost z adminu
+   (záložka Vzhled) — logo ve footeru zůstává na pevné velikosti. */
+.nav-logo-scalable {
+  font-size: var(--size-nav-logo);
+}
+.nav-logo-scalable .logo-icon {
+  width: 1.25em;
+  height: 1.25em;
+}
 .logo .logo-icon {
   width: 20px; height: 20px;
   color: var(--c-accent);
@@ -231,7 +243,7 @@ section { position: relative; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: radial-gradient(60% 55% at 50% 22%, #12294a 0%, #0d1d38 45%, var(--c-bg) 88%);
+  background: radial-gradient(60% 55% at 50% 22%, #0d1c33 0%, #0a1730 45%, var(--c-bg) 88%);
   color: var(--c-text-light);
   padding-top: 76px;
 }
@@ -306,7 +318,7 @@ section { position: relative; }
 
 .hero-eyebrow-tag {
   font-family: var(--f-mono);
-  font-size: 15px;
+  font-size: var(--size-hero-eyebrow);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-accent);
@@ -335,7 +347,7 @@ section { position: relative; }
   animation: hero-letter-in 0.6s cubic-bezier(0.2, 0.65, 0.3, 1) forwards;
 }
 .hero-title .letter-highlight {
-  color: #E4463A;
+  color: var(--c-hero-highlight);
 }
 @keyframes hero-letter-in {
   to { opacity: 1; transform: translateY(0); }

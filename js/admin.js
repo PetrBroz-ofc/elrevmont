@@ -246,8 +246,28 @@ function renderHeroTab(root) {
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Barevné zvýraznění v nadpisu')])])
   ]);
   highlightPanel.appendChild(el('p', { class: 'field-hint', style: 'margin-bottom:16px' }, [
-    document.createTextNode('U každého slova nastav, kolik prvních písmen se má zbarvit červeně (0 = beze změny). Náhled dole ukazuje aktuální výsledek.')
+    document.createTextNode('U každého slova nastav, kolik prvních písmen se má zbarvit, a jakou barvou. Náhled dole ukazuje aktuální výsledek.')
   ]));
+
+  if (!THEME.colors.heroHighlight) THEME.colors.heroHighlight = '#E4463A';
+  const colorRow = el('div', { class: 'theme-swatch-row' });
+  const colorPicker = el('input', { type: 'color' });
+  colorPicker.value = THEME.colors.heroHighlight;
+  const colorTextField = el('input', { type: 'text' });
+  colorTextField.value = THEME.colors.heroHighlight;
+  colorPicker.addEventListener('input', () => {
+    colorTextField.value = colorPicker.value;
+    THEME.colors.heroHighlight = colorPicker.value;
+    updatePreview();
+  });
+  colorTextField.addEventListener('input', () => {
+    THEME.colors.heroHighlight = colorTextField.value;
+    updatePreview();
+  });
+  colorRow.appendChild(colorPicker);
+  colorRow.appendChild(colorTextField);
+  highlightPanel.appendChild(field('Barva zvýraznění', colorRow));
+
   const highlightContainer = el('div');
   const previewEl = el('div', { class: 'hero-highlight-preview' });
   highlightPanel.appendChild(highlightContainer);
@@ -292,7 +312,11 @@ function renderHeroTab(root) {
       const count = h.titleHighlightCounts[i] || 0;
       const highlighted = word.slice(0, count);
       const rest = word.slice(count);
-      if (highlighted) previewEl.appendChild(el('span', { class: 'hero-highlight-red' }, [document.createTextNode(highlighted)]));
+      if (highlighted) {
+        const span = el('span', { class: 'hero-highlight-red' }, [document.createTextNode(highlighted)]);
+        span.style.color = THEME.colors.heroHighlight;
+        previewEl.appendChild(span);
+      }
       if (rest) previewEl.appendChild(document.createTextNode(rest));
       if (i < words.length - 1) previewEl.appendChild(document.createTextNode(' '));
     });
@@ -949,7 +973,8 @@ function renderThemeTab(root) {
     steel: 'Šedá pro texty',
     safe: 'Zelená (OK stavy)',
     textLight: 'Text na tmavém pozadí',
-    textDark: 'Text na světlém pozadí'
+    textDark: 'Text na světlém pozadí',
+    heroHighlight: 'Zvýraznění písmen v hero nadpisu (Ele/rev/mont)'
   };
   Object.entries(THEME.colors).forEach(([key, value]) => {
     const row = el('div', { class: 'theme-swatch-row' });
@@ -964,6 +989,30 @@ function renderThemeTab(root) {
     panel.appendChild(field(colorLabels[key] || key, row));
   });
   root.appendChild(panel);
+
+  const sizePanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Velikosti textu')])])
+  ]);
+  if (!THEME.sizes) THEME.sizes = { logoSize: 16, heroEyebrowSize: 15 };
+  const sizeLabels = {
+    logoSize: { label: 'Logo ELREVMONT v horní navigaci', min: 12, max: 40 },
+    heroEyebrowSize: { label: '„Milan Dolenský – elektro" (text nad hero nadpisem)', min: 10, max: 30 }
+  };
+  Object.entries(sizeLabels).forEach(([key, cfg]) => {
+    const currentValue = THEME.sizes[key] || cfg.min;
+    const row = el('div', { class: 'theme-size-row' });
+    const slider = el('input', { type: 'range', min: String(cfg.min), max: String(cfg.max), step: '1' });
+    slider.value = String(currentValue);
+    const valueLabel = el('span', { class: 'theme-size-value' }, [document.createTextNode(`${currentValue} px`)]);
+    slider.addEventListener('input', () => {
+      THEME.sizes[key] = Number(slider.value);
+      valueLabel.textContent = `${slider.value} px`;
+    });
+    row.appendChild(slider);
+    row.appendChild(valueLabel);
+    sizePanel.appendChild(field(cfg.label, row));
+  });
+  root.appendChild(sizePanel);
 
   const fontPanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Fonty')])])
@@ -1064,6 +1113,71 @@ async function boot() {
   document.getElementById('admin-app').hidden = false;
   await loadData();
   switchTab(ACTIVE_TAB);
+  setupLivePreview();
+}
+
+// ---------- Živý náhled webu (iframe s postMessage) ----------
+
+function setupLivePreview() {
+  const iframe = document.getElementById('admin-preview-iframe');
+  const preview = document.getElementById('admin-preview');
+  const toggleBtn = document.getElementById('preview-toggle-btn');
+  if (!iframe || !preview) return;
+
+  let previewReady = false;
+
+  function sendUpdate() {
+    if (!previewReady || !iframe.contentWindow) return;
+    iframe.contentWindow.postMessage(
+      { type: 'elrevmont-preview-update', content: CONTENT, theme: THEME },
+      '*'
+    );
+  }
+
+  window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'elrevmont-preview-ready') {
+      previewReady = true;
+      sendUpdate();
+    }
+  });
+
+  // Timing pojistka: pokud iframe stihne poslat "ready" ještě předtím,
+  // než se tenhle listener zaregistruje (iframe se začne načítat hned
+  // v HTML, zatímco setupLivePreview() čeká na asynchronní loadData()),
+  // ready zpráva by propadla a náhled by zůstal navždy "nepřipravený".
+  // Jako pojistku po načtení iframe (load event) rovnou nastavíme
+  // previewReady na true a zkusíme odeslat aktuální data.
+  iframe.addEventListener('load', () => {
+    previewReady = true;
+    setTimeout(sendUpdate, 200);
+  });
+  // Pro jistotu i hned teď, kdyby iframe byl už načtený dřív, než jsme
+  // se stihli připojit k load eventu.
+  setTimeout(() => { previewReady = true; sendUpdate(); }, 400);
+
+  // Delegovaný listener zachytí změny ve všech polích (text, textarea,
+  // select, number, color, range) bez nutnosti upravovat každé volání
+  // field()/textInput() zvlášť — stačí naslouchat na společném rodiči.
+  const content = document.getElementById('admin-content');
+  content.addEventListener('input', sendUpdate);
+  content.addEventListener('change', sendUpdate);
+
+  // Přepínač velikosti náhledu (počítač / mobil).
+  document.querySelectorAll('.admin-preview-size-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.admin-preview-size-toggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      preview.classList.toggle('size-mobile', btn.dataset.previewSize === 'mobile');
+    });
+  });
+
+  // Skrytí/zobrazení náhledu (více místa na formulář, když je potřeba).
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isHidden = preview.classList.toggle('hidden');
+      toggleBtn.textContent = isHidden ? 'Zobrazit náhled' : 'Skrýt náhled';
+    });
+  }
 }
 
 (async function initAdmin() {
