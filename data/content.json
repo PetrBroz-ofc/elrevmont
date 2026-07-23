@@ -72,20 +72,7 @@
     "eyebrow": "O nás",
     "title": "Provádíme revize elektro a hromosvodů",
     "text": "Provádíme revize elektroinstalací, elektrických zařízení, elektrických spotřebičů, ochrany před bleskem (hromosvodů). Dále provádíme elektromontážní práce, montáže ochrany před bleskem (hromosvodů), servis a údržbu zařízení (do 35 kV a elektrická zařízení v prostředí s nebezpečím výbuchu). Dále provádíme školení vyhlášky č. 50/1978 Sb. a individuální školení a konzultace v oblasti elektro.",
-    "badges": [
-      {
-        "value": "20+",
-        "label": "let praxe v oboru"
-      },
-      {
-        "value": "35 kV",
-        "label": "rozsah oprávnění"
-      },
-      {
-        "value": "100%",
-        "label": "dle norem ČSN"
-      }
-    ]
+    "badges": []
   },
   "services": {
     "eyebrow": "Co děláme",
