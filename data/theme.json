@@ -1,9 +1,9 @@
 {
   "colors": {
-    "bg": "#0A1628",
-    "bgSoft": "#0F2038",
+    "bg": "#1c4582",
+    "bgSoft": "#164a92",
     "bgLight": "#F5F7FA",
-    "accent": "#2E9BF0",
+    "accent": "#2095ee",
     "accentDark": "#1C7DD1",
     "steel": "#64748B",
     "safe": "#1E8E5A",
@@ -12,8 +12,8 @@
     "heroHighlight": "#f71302"
   },
   "sizes": {
-    "logoSize": 16,
-    "heroEyebrowSize": 15
+    "logoSize": 26,
+    "heroEyebrowSize": 20
   },
   "fonts": {
     "display": "Space Grotesk",
