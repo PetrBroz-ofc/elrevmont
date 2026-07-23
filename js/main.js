@@ -10,14 +10,17 @@
 const IS_PREVIEW_MODE = new URLSearchParams(location.search).has('preview');
 
 async function loadContent() {
-  const res = await fetch('data/content.json', { cache: 'no-store' });
+  // Timestamp v query stringu obchází jakoukoli mezilehlou cache
+  // (CDN, proxy, prohlížeč) — bez toho se po čase mohl na některých
+  // hostinzích zobrazovat starý obsah i po úspěšném uložení v adminu.
+  const res = await fetch(`data/content.json?t=${Date.now()}`, { cache: 'no-store' });
   if (!res.ok) throw new Error('Nepodařilo se načíst data/content.json');
   return res.json();
 }
 
 async function loadTheme() {
   try {
-    const res = await fetch('data/theme.json', { cache: 'no-store' });
+    const res = await fetch(`data/theme.json?t=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) return null;
     return res.json();
   } catch (err) {
@@ -47,6 +50,22 @@ const THEME_SIZE_VARS = {
   heroEyebrowSize: '--size-hero-eyebrow'
 };
 
+// Převede "světlost" hero pozadí (0–100, ovládaná sliderem v adminu) na
+// dvě konkrétní modré barvy pro radial-gradient v .hero — jde o jednu
+// stupnici "tmavší ↔ světlejší" místo dvou samostatných color pickerů,
+// ať je ovládání intuitivní jako posuvník.
+function heroBgLightnessToColors(lightness) {
+  const l = Math.min(Math.max(Number(lightness) || 0, 0), 100);
+  const hue = 215;      // stejný odstín modré jako zbytek paletky webu
+  const saturation = 58;
+  const midL = 8 + l * 0.42;   // střed gradientu: cca 8–50 % lightness
+  const outerL = midL * 0.72;  // okraj gradientu o něco tmavší než střed
+  return {
+    bg: `hsl(${hue}deg ${saturation}% ${midL.toFixed(1)}%)`,
+    bgMid: `hsl(${hue}deg ${saturation}% ${outerL.toFixed(1)}%)`
+  };
+}
+
 function applyTheme(theme) {
   if (!theme) return;
   const root = document.documentElement;
@@ -58,6 +77,12 @@ function applyTheme(theme) {
   }
   if (theme.sizes) {
     Object.entries(theme.sizes).forEach(([key, value]) => {
+      if (key === 'heroBgLightness') {
+        const { bg, bgMid } = heroBgLightnessToColors(value);
+        root.style.setProperty('--c-hero-bg', bg);
+        root.style.setProperty('--c-hero-bg-mid', bgMid);
+        return;
+      }
       const cssVar = THEME_SIZE_VARS[key];
       if (cssVar && value) root.style.setProperty(cssVar, `${value}px`);
     });

@@ -17,6 +17,8 @@
   --c-text-light: #F5F7FA;
   --c-text-dark: #101828;
   --c-hero-highlight: #E4463A;
+  --c-hero-bg: #0d1c33;
+  --c-hero-bg-mid: #0a1730;
   --c-border: rgba(245, 247, 250, 0.12);
   --c-border-dark: rgba(16, 24, 40, 0.10);
   --size-nav-logo: 16px;
@@ -243,7 +245,7 @@ section { position: relative; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: radial-gradient(60% 55% at 50% 22%, #0d1c33 0%, #0a1730 45%, var(--c-bg) 88%);
+  background: radial-gradient(60% 55% at 50% 22%, var(--c-hero-bg) 0%, var(--c-hero-bg-mid) 45%, var(--c-bg) 88%);
   color: var(--c-text-light);
   padding-top: 76px;
 }

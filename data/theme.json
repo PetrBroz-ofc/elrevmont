@@ -1,19 +1,20 @@
 {
   "colors": {
-    "bg": "#1c4582",
-    "bgSoft": "#164a92",
+    "bg": "#0A1628",
+    "bgSoft": "#0F2038",
     "bgLight": "#F5F7FA",
-    "accent": "#2095ee",
+    "accent": "#2E9BF0",
     "accentDark": "#1C7DD1",
     "steel": "#64748B",
     "safe": "#1E8E5A",
     "textLight": "#F5F7FA",
     "textDark": "#101828",
-    "heroHighlight": "#f71302"
+    "heroHighlight": "#E4463A"
   },
   "sizes": {
-    "logoSize": 26,
-    "heroEyebrowSize": 20
+    "logoSize": 16,
+    "heroEyebrowSize": 15,
+    "heroBgLightness": 11
   },
   "fonts": {
     "display": "Space Grotesk",

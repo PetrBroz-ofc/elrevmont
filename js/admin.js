@@ -60,8 +60,8 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 
 async function loadData() {
   const [contentRes, themeRes] = await Promise.all([
-    fetch('data/content.json', { cache: 'no-store' }),
-    fetch('data/theme.json', { cache: 'no-store' })
+    fetch(`data/content.json?t=${Date.now()}`, { cache: 'no-store' }),
+    fetch(`data/theme.json?t=${Date.now()}`, { cache: 'no-store' })
   ]);
   CONTENT = await contentRes.json();
   THEME = await themeRes.json();
@@ -993,26 +993,61 @@ function renderThemeTab(root) {
   const sizePanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Velikosti textu')])])
   ]);
-  if (!THEME.sizes) THEME.sizes = { logoSize: 16, heroEyebrowSize: 15 };
+  if (!THEME.sizes) THEME.sizes = { logoSize: 16, heroEyebrowSize: 15, heroBgLightness: 11 };
   const sizeLabels = {
-    logoSize: { label: 'Logo ELREVMONT v horní navigaci', min: 12, max: 40 },
-    heroEyebrowSize: { label: '„Milan Dolenský – elektro" (text nad hero nadpisem)', min: 10, max: 30 }
+    logoSize: { label: 'Logo ELREVMONT v horní navigaci', min: 12, max: 40, unit: 'px' },
+    heroEyebrowSize: { label: '„Milan Dolenský – elektro" (text nad hero nadpisem)', min: 10, max: 30, unit: 'px' }
   };
   Object.entries(sizeLabels).forEach(([key, cfg]) => {
     const currentValue = THEME.sizes[key] || cfg.min;
     const row = el('div', { class: 'theme-size-row' });
     const slider = el('input', { type: 'range', min: String(cfg.min), max: String(cfg.max), step: '1' });
     slider.value = String(currentValue);
-    const valueLabel = el('span', { class: 'theme-size-value' }, [document.createTextNode(`${currentValue} px`)]);
+    const valueLabel = el('span', { class: 'theme-size-value' }, [document.createTextNode(`${currentValue} ${cfg.unit}`)]);
     slider.addEventListener('input', () => {
       THEME.sizes[key] = Number(slider.value);
-      valueLabel.textContent = `${slider.value} px`;
+      valueLabel.textContent = `${slider.value} ${cfg.unit}`;
     });
     row.appendChild(slider);
     row.appendChild(valueLabel);
     sizePanel.appendChild(field(cfg.label, row));
   });
   root.appendChild(sizePanel);
+
+  // ---------- Škála "světlosti" hero pozadí ----------
+  const heroBgPanel = el('div', { class: 'card-panel' }, [
+    el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Barevná škála hero pozadí')])])
+  ]);
+  heroBgPanel.appendChild(el('p', { class: 'field-hint', style: 'margin-bottom:16px' }, [
+    document.createTextNode('Posuvník mění, jak tmavá nebo světlá je modrá barva pozadí v úvodní (hero) sekci webu. Náhled vpravo ukazuje aktuální odstín.')
+  ]));
+  const bgLightnessValue = THEME.sizes.heroBgLightness ?? 11;
+  const bgRow = el('div', { class: 'theme-size-row' });
+  const bgSlider = el('input', { type: 'range', min: '0', max: '100', step: '1' });
+  bgSlider.value = String(bgLightnessValue);
+  const bgValueLabel = el('span', { class: 'theme-size-value' }, [document.createTextNode(`${bgLightnessValue} %`)]);
+  const bgSwatch = el('div', { class: 'hero-bg-swatch' });
+
+  function heroBgLightnessToHex(l) {
+    // Stejný výpočet jako v js/main.js (heroBgLightnessToColors) — jen
+    // pro admin náhled, ať barva čtverečku odpovídá tomu, co uvidí na webu.
+    const hue = 215, saturation = 58;
+    const midL = 8 + l * 0.42;
+    return `hsl(${hue}deg ${saturation}% ${midL}%)`;
+  }
+  bgSwatch.style.background = heroBgLightnessToHex(bgLightnessValue);
+
+  bgSlider.addEventListener('input', () => {
+    const v = Number(bgSlider.value);
+    THEME.sizes.heroBgLightness = v;
+    bgValueLabel.textContent = `${v} %`;
+    bgSwatch.style.background = heroBgLightnessToHex(v);
+  });
+  bgRow.appendChild(bgSlider);
+  bgRow.appendChild(bgValueLabel);
+  bgRow.appendChild(bgSwatch);
+  heroBgPanel.appendChild(field('Světlost modré (tmavší ↔ světlejší)', bgRow));
+  root.appendChild(heroBgPanel);
 
   const fontPanel = el('div', { class: 'card-panel' }, [
     el('div', { class: 'card-panel-head' }, [el('h3', {}, [document.createTextNode('Fonty')])])

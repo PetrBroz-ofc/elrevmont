@@ -259,6 +259,52 @@ proměnné načetly do serverless funkcí.
    (viz sekce výše) — probíhá okamžitě při výběru souboru, ne až při „Uložit změny“.
 6. Vercel díky napojení na GitHub repo automaticky nasadí novou verzi webu.
 
+## Řešení: obsah se po čase „vracel do původu“
+
+Pokud se po úspěšném uložení v adminu obsah po nějaké době znovu zobrazoval
+starý — nešlo o ztrátu dat v GitHubu (commit proběhl v pořádku), ale o to,
+že se `data/content.json` a `data/theme.json` mohly cachovat na úrovni
+hostingu (CDN) nebo prohlížeče, takže se dočasně servírovala stará verze
+souboru, dokud cache nevypršela. Řeší to dvojitá pojistka:
+
+- `vercel.json` nastavuje `Cache-Control: no-store` explicitně pro
+  `/data/*`, `/index.html` a `/admin.html`, takže se tyto soubory na Vercel
+  CDN vůbec necachují.
+- `js/main.js` a `js/admin.js` navíc při každém načtení přidávají do URL
+  `?t=<timestamp>` (cache-busting) — každý požadavek má jinou URL, takže ho
+  žádná mezilehlá cache nemůže vrátit ze starého záznamu.
+
+Pokud se problém i přesto objeví znovu, zkontroluj, že web skutečně běží na
+Vercelu propojeném s tímhle GitHub repozitářem (ne na jiném hostingu nebo
+staré/odpojené instanci) — viz sekce „Nastavení na Vercelu“ výše.
+
+## Živý náhled v administraci
+
+V adminu je vpravo (na širších obrazovkách) panel „Živý náhled webu“ —
+zobrazuje `index.html` v `<iframe>` a při **jakékoli** změně v otevřeném
+formuláři (text, barva, velikost, cokoliv) se náhled okamžitě překreslí,
+ještě předtím, než cokoliv uložíš. Přepínač nahoře v panelu mění šířku
+náhledu mezi zobrazením na počítač a na mobil; tlačítko „Skrýt náhled“ v
+horní liště ho dá pryč, když je potřeba víc místa na formulář. Na mobilu
+(kde by na náhled vedle formuláře nebylo místo) se panel automaticky
+schová — pro kontrolu výsledku tam slouží tlačítko „Zobrazit web“ v
+postranním menu.
+
+Technicky: `index.html` otevřený s `?preview=1` v URL nenačítá data ze
+souborů, ale čeká na zprávy přes `postMessage` z rodičovského okna
+(`js/main.js`, funkce `initPreviewMode`) — díky tomu se náhled aktualizuje
+okamžitě, bez nutnosti uložení a bez nutnosti nového nahrání stránky.
+
+## Barevná škála hero pozadí
+
+V adminu, záložka **Vzhled**, je posuvník „Světlost modré (tmavší ↔
+světlejší)“ pro úvodní (hero) sekci — jedna stupnice 0–100 %, která plynule
+mění, jak tmavý nebo světlý je modrý gradient na pozadí. Barevný čtvereček
+vedle posuvníku ukazuje aktuální odstín. Hodnota se ukládá do
+`data/theme.json` → `sizes.heroBgLightness` a přepočítává se na dvě HSL
+barvy (`js/main.js`, funkce `heroBgLightnessToColors`) — je to jedna hodnota
+místo dvou samostatných color pickerů, ať je ovládání jednoduché.
+
 ## Lokální vývoj
 
 Pro testování frontendu bez API stačí otevřít `index.html` přes libovolný

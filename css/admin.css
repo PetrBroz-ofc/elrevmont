@@ -321,6 +321,10 @@ input, textarea, select { font: inherit; }
   font-family: var(--f-mono); font-size: 13px; color: var(--c-steel);
   min-width: 48px; text-align: right; flex-shrink: 0;
 }
+.hero-bg-swatch {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--c-border); flex-shrink: 0;
+}
 
 /* ---------- Image upload / gallery album editing ---------- */
 .image-upload { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
