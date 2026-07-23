@@ -1,0 +1,105 @@
+/* =========================================================
+   ELREVMONT — styly pro právní stránky (GDPR, Cookies)
+   Doplňuje css/style.css, používá stejné CSS proměnné/paletu.
+   ========================================================= */
+
+.legal-back-link {
+  padding: 10px 18px;
+  font-size: 13.5px;
+}
+
+.legal-page {
+  background: var(--c-bg-light);
+  padding-top: 76px;
+  min-height: 100vh;
+}
+
+.legal-container {
+  max-width: 760px;
+  padding-top: 64px;
+  padding-bottom: 80px;
+}
+
+.legal-title {
+  font-size: clamp(28px, 4vw, 40px);
+  margin-bottom: 12px;
+}
+
+.legal-updated {
+  color: var(--c-steel);
+  font-size: 13.5px;
+  font-family: var(--f-mono);
+  margin-bottom: 40px;
+}
+
+.legal-content h2 {
+  font-size: 19px;
+  margin-top: 40px;
+  margin-bottom: 14px;
+  color: var(--c-text-dark);
+}
+
+.legal-content p {
+  color: var(--c-steel);
+  font-size: 15.5px;
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
+.legal-content ul {
+  margin: 0 0 16px 0;
+  padding-left: 22px;
+  color: var(--c-steel);
+  font-size: 15.5px;
+  line-height: 1.75;
+}
+.legal-content ul li {
+  list-style: disc;
+  margin-bottom: 8px;
+}
+
+.legal-content a {
+  color: var(--c-accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legal-content strong { color: var(--c-text-dark); }
+.legal-content em { color: var(--c-hero-highlight); font-style: normal; font-weight: 600; }
+
+.legal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0 28px;
+  font-size: 14px;
+}
+.legal-table th,
+.legal-table td {
+  text-align: left;
+  padding: 12px 14px;
+  border: 1px solid var(--c-border-dark);
+  vertical-align: top;
+}
+.legal-table th {
+  background: var(--c-bg);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+}
+.legal-table td { color: var(--c-steel); }
+
+.legal-disclaimer {
+  margin-top: 40px;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px dashed var(--c-border-dark);
+  border-radius: var(--radius);
+  font-size: 13.5px !important;
+  color: var(--c-steel) !important;
+}
+
+@media (max-width: 760px) {
+  .legal-container { padding-top: 40px; padding-bottom: 56px; }
+  .legal-table { font-size: 13px; }
+  .legal-table th, .legal-table td { padding: 10px; }
+}

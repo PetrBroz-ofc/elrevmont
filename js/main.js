@@ -42,29 +42,15 @@ const THEME_COLOR_VARS = {
   safe: '--c-safe',
   textLight: '--c-text-light',
   textDark: '--c-text-dark',
-  heroHighlight: '--c-hero-highlight'
+  heroHighlight: '--c-hero-highlight',
+  heroBg: '--c-hero-bg',
+  heroBgMid: '--c-hero-bg-mid'
 };
 
 const THEME_SIZE_VARS = {
   logoSize: '--size-nav-logo',
   heroEyebrowSize: '--size-hero-eyebrow'
 };
-
-// Převede "světlost" hero pozadí (0–100, ovládaná sliderem v adminu) na
-// dvě konkrétní modré barvy pro radial-gradient v .hero — jde o jednu
-// stupnici "tmavší ↔ světlejší" místo dvou samostatných color pickerů,
-// ať je ovládání intuitivní jako posuvník.
-function heroBgLightnessToColors(lightness) {
-  const l = Math.min(Math.max(Number(lightness) || 0, 0), 100);
-  const hue = 215;      // stejný odstín modré jako zbytek paletky webu
-  const saturation = 58;
-  const midL = 8 + l * 0.42;   // střed gradientu: cca 8–50 % lightness
-  const outerL = midL * 0.72;  // okraj gradientu o něco tmavší než střed
-  return {
-    bg: `hsl(${hue}deg ${saturation}% ${midL.toFixed(1)}%)`,
-    bgMid: `hsl(${hue}deg ${saturation}% ${outerL.toFixed(1)}%)`
-  };
-}
 
 function applyTheme(theme) {
   if (!theme) return;
@@ -77,12 +63,6 @@ function applyTheme(theme) {
   }
   if (theme.sizes) {
     Object.entries(theme.sizes).forEach(([key, value]) => {
-      if (key === 'heroBgLightness') {
-        const { bg, bgMid } = heroBgLightnessToColors(value);
-        root.style.setProperty('--c-hero-bg', bg);
-        root.style.setProperty('--c-hero-bg-mid', bgMid);
-        return;
-      }
       const cssVar = THEME_SIZE_VARS[key];
       if (cssVar && value) root.style.setProperty(cssVar, `${value}px`);
     });
@@ -542,6 +522,14 @@ function renderAll(data, theme) {
   // každém překreslení nepřibýval další <canvas> navrch.
   if (!IS_PREVIEW_MODE && typeof initClickSpark === 'function') {
     initClickSpark({ sparkColor: '#2E9BF0', sparkCount: 8, sparkRadius: 20, duration: 420 });
+  }
+
+  // Cookie lišta a podmíněné Google Analytics (vanilla JS, viz
+  // js/cookie-consent.js). V náhledovém režimu se nespouští — lišta
+  // by v malém iframe okně jen zbytečně překážela a GA se v náhledu
+  // nemá spouštět vůbec.
+  if (!IS_PREVIEW_MODE && typeof initCookieConsent === 'function') {
+    initCookieConsent(data.seo && data.seo.googleAnalyticsId);
   }
 }
 

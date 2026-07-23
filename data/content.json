@@ -9,7 +9,8 @@
     "title": "Elektro revize a montáže Liberec | Milan Dolenský",
     "description": "Revize elektroinstalací, spotřebičů a hromosvodů, elektromontáže, servis a školení v Liberci a okolí. Přes 20 let praxe, revize dle ČSN 33 2000-6.",
     "keywords": "revize elektro Liberec, revizní technik, revize hromosvodu, revize spotřebičů, elektromontáže Liberec, Milan Dolenský",
-    "ogImage": "assets/img/og-image.jpg"
+    "ogImage": "assets/img/og-image.jpg",
+    "googleAnalyticsId": ""
   },
   "nav": {
     "logo": "ELREVMONT",

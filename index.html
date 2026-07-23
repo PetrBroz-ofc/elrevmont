@@ -227,6 +227,11 @@
       <div class="footer-bottom-left">
         <div class="footer-bottom" id="footer-copyright"></div>
         <a href="#" class="footer-credit" id="footer-credit" target="_blank" rel="noopener"></a>
+        <nav class="footer-legal-links">
+          <a href="zasady-ochrany-osobnich-udaju.html">Ochrana osobních údajů</a>
+          <a href="cookies.html">Cookies</a>
+          <button type="button" id="footer-cookie-settings-btn" class="footer-legal-link-btn">Nastavení cookies</button>
+        </nav>
       </div>
       <a href="admin.html" class="footer-admin-link" title="Administrace" aria-label="Administrace">
         <span id="footer-admin-icon"></span>
@@ -235,10 +240,30 @@
   </div>
 </footer>
 
+<!-- COOKIE LIŠTA -->
+<div class="cookie-banner" id="cookie-banner" role="dialog" aria-label="Souhlas s používáním cookies" aria-live="polite">
+  <div class="cookie-banner-inner">
+    <div class="cookie-banner-text">
+      <p><strong>Používáme cookies</strong></p>
+      <p>
+        Tento web používá soubory cookie pro zajištění základní funkčnosti a se
+        souhlasem i pro měření návštěvnosti (Google Analytics). Svůj souhlas
+        můžete kdykoliv změnit v patičce webu. Více v
+        <a href="cookies.html">zásadách používání cookies</a>.
+      </p>
+    </div>
+    <div class="cookie-banner-actions">
+      <button type="button" class="btn btn-outline" id="cookie-reject-btn">Odmítnout volitelné</button>
+      <button type="button" class="btn btn-primary" id="cookie-accept-btn">Přijmout vše</button>
+    </div>
+  </div>
+</div>
+
 <script src="js/icons.js"></script>
 <script src="js/hero-paths.js"></script>
 <script src="js/border-glow.js"></script>
 <script src="js/click-spark.js"></script>
+<script src="js/cookie-consent.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
